@@ -1,0 +1,19 @@
+{
+  "name": "pull-to-refresh",
+  "description": "angular2+ pull to refresh",
+  "keywords" :["Angular","ptr", "pull-to-refresh"],
+  "license": "MIT LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yeongcheon/ngx-pull-to-refresh.git"
+  },
+  "author": {
+    "name": "YeongCheon Kim",
+    "email": "kyc1682@gmail.com"
+  },
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^7.2.0",
+    "@angular/core": "^7.2.0"
+  }
+}

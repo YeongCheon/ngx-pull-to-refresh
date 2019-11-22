@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "pull-to-refresh": [
+        "dist/pull-to-refresh"
+      ],
+      "pull-to-refresh/*": [
+        "dist/pull-to-refresh/*"
+      ]
+    }
   }
 }

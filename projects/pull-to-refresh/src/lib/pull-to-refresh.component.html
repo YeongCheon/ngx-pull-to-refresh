@@ -1,0 +1,12 @@
+<div #wrapper class="str-container" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onMouseup($event)" style="height:100%; overflow:scroll;">
+	<div #loadingbar style="z-index:9999;position:absolute;display:none;width:100%;text-align:center;">
+		Loading...
+		<!-- <mat-progress-spinner
+			 #loadingIcon
+			 [diameter]="40"
+			 [mode]="loadingMode"
+			 [value]="scrollPullPercent"
+			 ></mat-progress-spinner> -->
+	</div>
+	<ng-content></ng-content>
+</div>
