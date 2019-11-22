@@ -1,5 +1,5 @@
 {
-  "name": "pull-to-refresh",
+  "name": "ngx-pull-to-refresh",
   "description": "angular2+ pull to refresh",
   "keywords" :["Angular","ptr", "pull-to-refresh"],
   "license": "MIT LICENSE",
