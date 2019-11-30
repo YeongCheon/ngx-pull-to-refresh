@@ -2,16 +2,15 @@ import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '
 import { Observable } from 'rxjs';
 
 @Component({
-	selector: 'ngx-pull-to-refresh',
-	templateUrl: './pull-to-refresh.component.html',
-	styles: []
+    selector: 'ngx-pull-to-refresh',
+    templateUrl: './pull-to-refresh.component.html',
+    styles: []
 })
 export class PullToRefreshComponent implements OnInit {
     private isRefresh = false;
     private isScrollTop = false;
     private isOnScrollBottom = false;
     private lastScrollTop = 0;
-    private element: HTMLElement;
     @ViewChild('wrapper')
     private ele: ElementRef;
     @ViewChild('loadingbar')
@@ -37,7 +36,8 @@ export class PullToRefreshComponent implements OnInit {
     private get scrollTop() { return this.ele.nativeElement.scrollTop || 0; }
 
     onTouchMove(event): void {
-        const wrapper: HTMLElement = this.ele.nativeElement;
+        // const wrapper: HTMLElement = this.ele.nativeElement;
+        const wrapper: HTMLElement = document.documentElement;
 
         const moveYDistance: number = this.touchStartScreenY - event.touches[0].screenY;
 
@@ -59,13 +59,11 @@ export class PullToRefreshComponent implements OnInit {
 
         this.isOnScrollBottom = wrapper.scrollTop >= 0 &&
             wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight;
-        console.log(this.isOnScrollBottom);
     }
 
     onTouchStart(event): void {
         this.isRefresh = false;
         this.touchStartScreenY = event.touches[0].screenY;
-        console.log('touchStart');
     }
 
     onMouseup(event): void {
@@ -80,7 +78,6 @@ export class PullToRefreshComponent implements OnInit {
         }
 
         this.restoreWrapper();
-        console.log('onMouseUp');
     }
 
     moveWrapper(offsetY: number): void {
@@ -97,8 +94,6 @@ export class PullToRefreshComponent implements OnInit {
             loadingbar.style.top = loadingbarY.toString() + 'px';
             this.scrollPullPercent = (loadingbarY / this.DISTANCE_FOR_REFRESH) * 100;
         }
-
-        console.log('moveWrapper:', offsetY);
     }
 
     restoreWrapper(): void {
@@ -107,7 +102,6 @@ export class PullToRefreshComponent implements OnInit {
 
         wrapper.style.marginTop = '0px';
         // loadingbar.style.display = 'none';
-        console.log('restoreWrapper:');
     }
 
     restoreLoadingbar(): void {
