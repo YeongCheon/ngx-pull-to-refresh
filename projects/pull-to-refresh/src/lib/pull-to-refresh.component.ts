@@ -73,7 +73,7 @@ export class PullToRefreshComponent implements OnInit {
             this.restoreLoadingbar();
         }
 
-        if (this.isOnScrollBottom) {
+        if (this.isOnScrollBottom && this.loadMoreFunction) {
             this.loadMoreFunction();
         }
 
