@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 @Component({
     selector: 'ngx-pull-to-refresh',
     templateUrl: './pull-to-refresh.component.html',
-    styles: []
+    styleUrls: ['./pull-to-refresh.component.scss']
 })
 export class PullToRefreshComponent implements OnInit {
     private isRefresh = false;
