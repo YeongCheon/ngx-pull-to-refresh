@@ -20,6 +20,7 @@ export class PullToRefreshComponent implements OnInit {
     private touchStartScreenY = 0;
 
     private readonly DISTANCE_FOR_REFRESH = 40;
+    private readonly LOADINGBAR_DISPLAY_STYLE = 'flex';
 
     loadingMode = 'determinate'; // indeterminate | determinate
     scrollPullPercent = 20;
@@ -90,7 +91,7 @@ export class PullToRefreshComponent implements OnInit {
         }
 
         if (this.isScrollTop && offsetY >= 0) {
-            loadingbar.style.display = 'inline';
+            loadingbar.style.display = this.LOADINGBAR_DISPLAY_STYLE;
             loadingbar.style.top = loadingbarY.toString() + 'px';
             this.scrollPullPercent = (loadingbarY / this.DISTANCE_FOR_REFRESH) * 100;
         }
