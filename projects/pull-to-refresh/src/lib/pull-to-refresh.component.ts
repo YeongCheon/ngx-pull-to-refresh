@@ -114,12 +114,15 @@ export class PullToRefreshComponent implements OnInit {
         loadingbar.style.top = '-20px';
 
         this.loadingMode = 'determinate';
+        this.loadingbar.nativeElement.querySelector('.pie-wrapper').classList.remove('rotating');
         this.scrollPullPercent = 0;
+        this.drawCircle(this.scrollPullPercent);
     }
 
 
     rotateLoadingIcon(): void {
-        this.loadingMode = 'indeterminate';
+        this.drawCircle(95);
+        this.loadingbar.nativeElement.querySelector('.pie-wrapper').classList.add('rotating');
     }
 
     refreshFunction(): void {
