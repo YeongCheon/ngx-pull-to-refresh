@@ -60,6 +60,8 @@ export class PullToRefreshComponent implements OnInit {
 
         this.isOnScrollBottom = wrapper.scrollTop >= 0 &&
             wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight;
+
+        this.drawCircle(this.scrollPullPercent);
     }
 
     onTouchStart(event): void {
@@ -132,5 +134,21 @@ export class PullToRefreshComponent implements OnInit {
 
     loadMoreFunction(): void {
         this.loadMore.emit(true);
+    }
+
+    private drawCircle(percentage: number) {
+        const leftSideElement: HTMLElement = this.loadingbar.nativeElement.querySelector('.left-side');
+        const rightSideElement: HTMLElement = this.loadingbar.nativeElement.querySelector('.right-side');
+
+        if (percentage <= 50) {
+            leftSideElement.style.borderColor = '#bdc3c7';
+
+            const rotateValue = (100 - (50 - percentage)) / 100 * 360;
+            leftSideElement.style.transform = `rotate(${rotateValue}deg)`;
+        } else {
+            leftSideElement.style.borderColor = '#e74c3c';
+
+            leftSideElement.style.transform = `rotate(${percentage * 3.6}deg)`;
+        }
     }
 }

@@ -13,7 +13,7 @@
 // source: https://codepen.io/michalburda/pen/KNWqRZ/
 // -- vars
 $bg-color: #34495e;
-$default-size: 1em;
+$default-size: 3em;
 $label-font-size: $default-size / 4;
 $label-font-size-redo: $default-size * 4;
 
@@ -30,6 +30,7 @@ $label-font-size-redo: $default-size * 4;
     }
 
     .left-side {
+	  z-index: 1;
       transform: rotate($progress * 3.6deg);
     }
 
