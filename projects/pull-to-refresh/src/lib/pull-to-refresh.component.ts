@@ -37,8 +37,8 @@ export class PullToRefreshComponent implements OnInit {
     private get scrollTop() { return this.ele.nativeElement.scrollTop || 0; }
 
     onTouchMove(event): void {
-        // const wrapper: HTMLElement = this.ele.nativeElement;
-        const wrapper: HTMLElement = document.documentElement;
+        const wrapper: HTMLElement = this.ele.nativeElement;
+        // const wrapper: HTMLElement = document.documentElement;
 
         const moveYDistance: number = this.touchStartScreenY - event.touches[0].screenY;
 

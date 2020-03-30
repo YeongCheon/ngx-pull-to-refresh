@@ -167,5 +167,8 @@
       }
     }
   },
-  "defaultProject": "pull-to-refresh"
+  "defaultProject": "pull-to-refresh",
+  "cli": {
+    "analytics": false
+  }
 }
