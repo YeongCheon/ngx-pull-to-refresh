@@ -1,12 +1,11 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'ngx-pull-to-refresh',
-    templateUrl: './pull-to-refresh.component.html',
-    styleUrls: ['./pull-to-refresh.component.scss']
+    templateUrl: './ngx-pull-to-refresh.component.html',
+    styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
-export class PullToRefreshComponent implements OnInit {
+export class NgxPullToRefreshComponent implements OnInit {
     private isRefresh = false;
     private isScrollTop = false;
     private isOnScrollBottom = false;

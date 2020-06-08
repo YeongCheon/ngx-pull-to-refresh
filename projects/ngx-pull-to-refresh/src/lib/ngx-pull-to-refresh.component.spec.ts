@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PullToRefreshComponent } from './pull-to-refresh.component';
+import { NgxPullToRefreshComponent } from './ngx-pull-to-refresh.component';
 
-describe('PullToRefreshComponent', () => {
-  let component: PullToRefreshComponent;
-  let fixture: ComponentFixture<PullToRefreshComponent>;
+describe('NgxPullToRefreshComponent', () => {
+  let component: NgxPullToRefreshComponent;
+  let fixture: ComponentFixture<NgxPullToRefreshComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PullToRefreshComponent ]
+      declarations: [ NgxPullToRefreshComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PullToRefreshComponent);
+    fixture = TestBed.createComponent(NgxPullToRefreshComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
