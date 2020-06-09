@@ -58,7 +58,7 @@ export class NgxPullToRefreshComponent implements OnInit {
     @HostListener('window:scroll', ['$event'])
     onScroll($event): void {
         this.isOnScrollBottom = window.scrollY >= 0 &&
-            (window.scrollY + window.innerHeight) >= document.body.scrollHeight;
+            (window.scrollY + window.innerHeight) >= document.scrollingElement.scrollHeight * 0.9;
 
 
         if (this.isOnScrollBottom &&
