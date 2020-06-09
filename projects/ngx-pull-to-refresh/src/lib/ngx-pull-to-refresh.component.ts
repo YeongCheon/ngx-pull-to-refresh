@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, HostListener } from '@angular/core';
 
 @Component({
     selector: 'ngx-pull-to-refresh',
@@ -33,15 +33,10 @@ export class NgxPullToRefreshComponent implements OnInit {
     ngOnInit() {
     }
 
-    private get scrollTop() { return this.ele.nativeElement.scrollTop || 0; }
-
-    onTouchMove(event): void {
-        const wrapper: HTMLElement = this.ele.nativeElement;
-        // const wrapper: HTMLElement = document.documentElement;
-
-        const moveYDistance: number = this.touchStartScreenY - event.touches[0].screenY;
-
-        if (wrapper.scrollTop <= 0 && this.lastScrollTop <= 0) {
+    @HostListener('window:touchmove', ['$event'])
+    onTouchMove($event): void {
+        const moveYDistance: number = this.touchStartScreenY - $event.touches[0].screenY;
+        if (window.scrollY <= 0 && this.lastScrollTop <= 0) {
             this.isScrollTop = true;
         } else {
             this.isScrollTop = false;
@@ -53,30 +48,36 @@ export class NgxPullToRefreshComponent implements OnInit {
             this.isRefresh = false;
         }
 
-        this.lastScrollTop = wrapper.scrollTop;
+        this.lastScrollTop = window.scrollY;
 
         this.moveWrapper(moveYDistance * -1);
-
-        this.isOnScrollBottom = wrapper.scrollTop >= 0 &&
-            wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight;
 
         this.drawCircle(this.scrollPullPercent);
     }
 
-    onTouchStart(event): void {
-        this.isRefresh = false;
-        this.touchStartScreenY = event.touches[0].screenY;
+    @HostListener('window:scroll', ['$event'])
+    onScroll($event): void {
+        this.isOnScrollBottom = window.scrollY >= 0 &&
+            (window.scrollY + window.innerHeight) >= document.body.scrollHeight;
+
+
+        if (this.isOnScrollBottom && this.loadMoreFunction) {
+            this.loadMoreFunction();
+        }
     }
 
-    onMouseup(event): void {
+    @HostListener('window:touchstart', ['$event'])
+    onTouchStart($event): void {
+        this.isRefresh = false;
+        this.touchStartScreenY = $event.touches[0].screenY;
+    }
+
+    @HostListener('window:touchend', ['$event'])
+    onMouseup($event): void {
         if (this.isRefresh) {
             this.refreshFunction();
         } else {
             this.restoreLoadingbar();
-        }
-
-        if (this.isOnScrollBottom && this.loadMoreFunction) {
-            this.loadMoreFunction();
         }
 
         this.restoreWrapper();

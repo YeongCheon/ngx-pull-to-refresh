@@ -1,13 +1,13 @@
-<div #wrapper class="str-container" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onMouseup($event)" style="min-height:100%; overflow:scroll;">
-	<div #loadingbar class="loadingbar-container" style="">
-		<div class="pie-wrapper progress-95 style-2">
-			<!-- <span class="label">95<span class="smaller">%</span></span> -->
-			<div class="pie">
-				<div class="left-side half-circle"></div>
-				<div class="right-side half-circle"></div>
-			</div>
-			<div class="shadow"></div>
-		</div>
+<div #wrapper class="str-container" style="min-height:100%; overflow:scroll;">
+  <div #loadingbar class="loadingbar-container" style="">
+	<div class="pie-wrapper progress-95 style-2">
+	  <!-- <span class="label">95<span class="smaller">%</span></span> -->
+	  <div class="pie">
+		<div class="left-side half-circle"></div>
+		<div class="right-side half-circle"></div>
+	  </div>
+	  <div class="shadow"></div>
 	</div>
-	<ng-content></ng-content>
+  </div>
+  <ng-content></ng-content>
 </div>

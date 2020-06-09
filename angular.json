@@ -42,6 +42,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ngx-pull-to-refresh"
+    }
+  },
+  "defaultProject": "ngx-pull-to-refresh",
+  "cli": {
+    "analytics": false
+  }
 }
