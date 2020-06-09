@@ -11,7 +11,7 @@ export class NgxPullToRefreshComponent implements OnInit {
     private isOnScrollBottom = false;
     private lastScrollTop = 0;
     @ViewChild('wrapper')
-    private ele: ElementRef;
+    private wrapperElement: ElementRef;
     @ViewChild('loadingbar')
     private loadingbar: ElementRef;
     @ViewChild('loadingIcon')
@@ -61,7 +61,9 @@ export class NgxPullToRefreshComponent implements OnInit {
             (window.scrollY + window.innerHeight) >= document.body.scrollHeight;
 
 
-        if (this.isOnScrollBottom && this.loadMoreFunction) {
+        if (this.isOnScrollBottom &&
+            this.loadMoreFunction &&
+            document.contains(this.wrapperElement.nativeElement)) {
             this.loadMoreFunction();
         }
     }
@@ -74,7 +76,7 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     @HostListener('window:touchend', ['$event'])
     onMouseup($event): void {
-        if (this.isRefresh) {
+        if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
             this.refreshFunction();
         } else {
             this.restoreLoadingbar();
@@ -84,7 +86,7 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     moveWrapper(offsetY: number): void {
-        const wrapper: HTMLElement = this.ele.nativeElement;
+        const wrapper: HTMLElement = this.wrapperElement.nativeElement;
         const loadingbar: HTMLElement = this.loadingbar.nativeElement;
 
         let loadingbarY: number = offsetY;
@@ -100,7 +102,7 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     restoreWrapper(): void {
-        const wrapper: HTMLElement = this.ele.nativeElement;
+        const wrapper: HTMLElement = this.wrapperElement.nativeElement;
         const loadingbar: HTMLElement = this.loadingbar.nativeElement;
 
         wrapper.style.marginTop = '0px';
