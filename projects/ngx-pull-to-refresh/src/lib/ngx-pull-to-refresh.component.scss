@@ -30,7 +30,7 @@ $label-font-size-redo: $default-size * 4;
     }
 
     .left-side {
-	  z-index: 1;
+	    z-index: 1;
       transform: rotate($progress * 3.6deg);
     }
 
@@ -50,7 +50,7 @@ $label-font-size-redo: $default-size * 4;
 
 @mixin draw-progress--solid($progress, $color, $bg-color) {
   background: linear-gradient(to right, $color 50%, $bg-color 50%);
-  
+
   &:before {
     @if $progress <= 50 {
       background: $bg-color;
@@ -95,7 +95,7 @@ body {
   float: left;
   margin: 15px;
   position: relative;
-  
+
   &:nth-child(3n + 1) {
     clear: both;
   }
@@ -195,19 +195,19 @@ body {
     margin-left: 50%;
     transform-origin: left;
   }
-  
+
   .label {
     background: transparent;
   }
-  
+
   &.progress-65 {
     @include draw-progress--solid(65, #e67e22, $bg-color);
   }
-  
+
   &.progress-25 {
     @include draw-progress--solid(25, #9b59b6, $bg-color);
   }
-  
+
   &.progress-88 {
     @include draw-progress--solid(88, #3498db, $bg-color);
   }
