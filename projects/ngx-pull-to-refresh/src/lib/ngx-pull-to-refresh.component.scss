@@ -158,26 +158,6 @@ body {
     }
   }
 
-  &.progress-30 {
-    @include draw-progress(30, #3498db);
-  }
-
-  &.progress-60 {
-    @include draw-progress(60, #9b59b6);
-  }
-
-  &.progress-90 {
-    @include draw-progress(90, #e67e22);
-  }
-
-  &.progress-45 {
-    @include draw-progress(45, #1abc9c);
-  }
-
-  &.progress-75 {
-    @include draw-progress(75, #8e44ad);
-  }
-
   &.progress-95 {
     @include draw-progress(95, #e74c3c);
   }
@@ -198,18 +178,6 @@ body {
 
   .label {
     background: transparent;
-  }
-
-  &.progress-65 {
-    @include draw-progress--solid(65, #e67e22, $bg-color);
-  }
-
-  &.progress-25 {
-    @include draw-progress--solid(25, #9b59b6, $bg-color);
-  }
-
-  &.progress-88 {
-    @include draw-progress--solid(88, #3498db, $bg-color);
   }
 }
 
