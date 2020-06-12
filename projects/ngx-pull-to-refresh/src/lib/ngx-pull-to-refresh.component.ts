@@ -7,7 +7,7 @@ import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, HostLis
 })
 export class NgxPullToRefreshComponent implements OnInit {
   @Input()
-  spinnerColor = 'green';
+  spinnerColor = 'red';
   spinnerBackgroundColor = '#bdc3c7';
 
   private isRefresh = false;
