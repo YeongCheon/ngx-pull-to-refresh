@@ -1,5 +1,5 @@
 <ngx-pull-to-refresh
-  (refresh)="alert('refresh')"
+  (refresh)="myRefreshEvent($event, 'refresh')"
   (loadMore)="alert('loadmore')"
   style="display:block;height:100%;">
   <div style="height: 3000px">long content</div>

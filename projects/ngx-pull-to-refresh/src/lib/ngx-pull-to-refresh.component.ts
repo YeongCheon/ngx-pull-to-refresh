@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, HostListener, Input } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ngx-pull-to-refresh',
@@ -18,8 +19,6 @@ export class NgxPullToRefreshComponent implements OnInit {
   private wrapperElement: ElementRef;
   @ViewChild('loadingContainer')
   private loadingbar: ElementRef;
-  @ViewChild('spinner')
-  private spinnerElement: ElementRef;
   @ViewChild('circle')
   private circleSvgElement: ElementRef;
 
@@ -29,17 +28,22 @@ export class NgxPullToRefreshComponent implements OnInit {
   private readonly DISTANCE_FOR_REFRESH = 40;
   private readonly LOADINGBAR_DISPLAY_STYLE = 'flex';
 
-  loadingMode = 'determinate'; // indeterminate | determinate
   scrollPullPercent = 20;
   isPlayingAnimation = false;
 
   @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
+  refreshCompleteSubject = new Subject();
   @Output() loadMore: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() {
   }
 
   ngOnInit() {
+    this.refreshCompleteSubject.subscribe(()=>{
+      this.isPlayingAnimation = false;
+      this.restoreWrapper();
+      this.restoreLoadingbar();
+    });
   }
 
   @HostListener('window:touchmove', ['$event'])
@@ -88,10 +92,9 @@ export class NgxPullToRefreshComponent implements OnInit {
     if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
       this.refreshFunction();
     } else {
+      this.restoreWrapper();
       this.restoreLoadingbar();
     }
-
-    this.restoreWrapper();
   }
 
   moveWrapper(offsetY: number): void {
@@ -115,29 +118,21 @@ export class NgxPullToRefreshComponent implements OnInit {
     const loadingbar: HTMLElement = this.loadingbar.nativeElement;
 
     wrapper.style.marginTop = '0px';
-    // loadingbar.style.display = 'none';
+    loadingbar.style.display = 'none';
   }
 
   restoreLoadingbar(): void {
     const loadingbar: HTMLElement = this.loadingbar.nativeElement;
     // const loadingIcon: HTMLElement = this.loadingIcon.nativeElement;
     loadingbar.style.display = 'none';
-    loadingbar.style.top = '-20px';
 
-    this.loadingMode = 'determinate';
-    this.loadingbar.nativeElement.querySelector('.pie-wrapper').classList.remove('rotating');
     this.scrollPullPercent = 0;
     this.drawCircle(this.scrollPullPercent);
   }
 
   refreshFunction(): void {
     this.isPlayingAnimation = true;
-
-    this.refresh.asObservable().subscribe(() => {
-      // this.restoreLoadingbar();
-    });
-
-    this.refresh.emit(true);
+    this.refresh.emit(this.refreshCompleteSubject);
   }
 
   loadMoreFunction(): void {

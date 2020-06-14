@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,14 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'example';
 
+  myRefreshEvent(event: Subject<any>, message: string) {
+    setTimeout(()=>{
+      alert(message);
+      event.next();
+    }, 3000);
+  }
+
   alert(message: string) {
-    console.log(message);
+    alert(message);
   }
 }
