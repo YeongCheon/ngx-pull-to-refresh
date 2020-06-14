@@ -1,21 +1,26 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
-.loadingbar-container {
-	display:none; // or flex
-	z-index:9999;
-	position:absolute;
-	width:100%;
-	text-align:center;
-	justify-content: center;
-}
-
-
 // source: https://codepen.io/michalburda/pen/KNWqRZ/
 // -- vars
 $bg-color: #34495e;
 $default-size: 3em;
 $label-font-size: $default-size / 4;
 $label-font-size-redo: $default-size * 4;
+
+.str-container {
+	display:block;
+	height:100%;
+}
+
+.loadingbar-container {
+	display:none; // or flex
+  // display: flex;
+	z-index:9999;
+	position:absolute;
+	width:100%;
+	text-align:center;
+	justify-content: center;
+}
 
 // -- mixins
 @mixin size($width, $height) {
@@ -76,18 +81,6 @@ body {
   font-family: 'Lato', Tahoma, Geneva, sans-serif;
   font-size: 16px;
   padding: 10px;
-}
-
-.set-size {
-  font-size: 10em;
-}
-
-.charts-container {
-  &:after {
-    clear: both;
-    content: '';
-    display: table;
-  }
 }
 
 .pie-wrapper {
@@ -158,69 +151,6 @@ body {
     }
   }
 
-  &.progress-95 {
-    @include draw-progress(95, #e74c3c);
-  }
-}
 
-.pie-wrapper--solid {
-  border-radius: 50%;
-  overflow: hidden;
-
-  &:before {
-    border-radius: 0 100% 100% 0 / 50%;
-    content: '';
-    display: block;
-    height: 100%;
-    margin-left: 50%;
-    transform-origin: left;
-  }
-
-  .label {
-    background: transparent;
-  }
-}
-
-
-.str-container {
-	display:block;
-	height:100%;
-}
-
-// source: https://stackoverflow.com/questions/6410730/css-endless-rotation-animation
-@-webkit-keyframes rotating /* Safari and Chrome */ {
-  from {
-    -webkit-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes rotating {
-  from {
-    -ms-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -ms-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-.rotating {
-  -webkit-animation: rotating 2s linear infinite;
-  -moz-animation: rotating 2s linear infinite;
-  -ms-animation: rotating 2s linear infinite;
-  -o-animation: rotating 2s linear infinite;
-  animation: rotating 2s linear infinite;
+  @include draw-progress(95, #e74c3c);
 }
