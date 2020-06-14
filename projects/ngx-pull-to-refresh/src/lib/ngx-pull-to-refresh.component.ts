@@ -16,15 +16,22 @@ export class NgxPullToRefreshComponent implements OnInit {
   private lastScrollTop = 0;
   @ViewChild('wrapper')
   private wrapperElement: ElementRef;
-  @ViewChild('loadingbar')
+  @ViewChild('loadingContainer')
   private loadingbar: ElementRef;
+  @ViewChild('spinner')
+  private spinnerElement: ElementRef;
+  @ViewChild('circle')
+  private circleSvgElement: ElementRef;
+
   private touchStartScreenY = 0;
 
+  private readonly CIRCLE_OFFSET = 187;
   private readonly DISTANCE_FOR_REFRESH = 40;
   private readonly LOADINGBAR_DISPLAY_STYLE = 'flex';
 
   loadingMode = 'determinate'; // indeterminate | determinate
   scrollPullPercent = 20;
+  isPlayingAnimation = false;
 
   @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
   @Output() loadMore: EventEmitter<any> = new EventEmitter<any>();
@@ -123,16 +130,11 @@ export class NgxPullToRefreshComponent implements OnInit {
     this.drawCircle(this.scrollPullPercent);
   }
 
-  rotateLoadingIcon(): void {
-    this.drawCircle(95);
-    this.loadingbar.nativeElement.querySelector('.pie-wrapper').classList.add('rotating');
-  }
-
   refreshFunction(): void {
-    this.rotateLoadingIcon();
+    this.isPlayingAnimation = true;
 
     this.refresh.asObservable().subscribe(() => {
-      this.restoreLoadingbar();
+      // this.restoreLoadingbar();
     });
 
     this.refresh.emit(true);
@@ -143,19 +145,7 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   private drawCircle(percentage: number) {
-    const leftSideElement: HTMLElement = this.loadingbar.nativeElement.querySelector('.left-side');
-    const rightSideElement: HTMLElement = this.loadingbar.nativeElement.querySelector('.right-side');
-    rightSideElement.style.borderColor = this.spinnerColor;
-
-    if (percentage <= 50) {
-      leftSideElement.style.borderColor = this.spinnerBackgroundColor;
-
-      const rotateValue = (100 - (50 - percentage)) / 100 * 360;
-      leftSideElement.style.transform = `rotate(${rotateValue}deg)`;
-    } else {
-      leftSideElement.style.borderColor = this.spinnerColor;
-
-      leftSideElement.style.transform = `rotate(${percentage * 3.6}deg)`;
-    }
+    const offset = this.CIRCLE_OFFSET - (this.CIRCLE_OFFSET * (Math.abs(percentage) / 100));
+    this.circleSvgElement.nativeElement.style.strokeDashoffset = offset;
   }
 }

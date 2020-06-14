@@ -1,11 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
-// source: https://codepen.io/michalburda/pen/KNWqRZ/
-// -- vars
-$bg-color: #34495e;
-$default-size: 3em;
-$label-font-size: $default-size / 4;
-$label-font-size-redo: $default-size * 4;
+// source: https://codepen.io/mrrocks/pen/EiplA
 
 .str-container {
 	display:block;
@@ -22,57 +17,6 @@ $label-font-size-redo: $default-size * 4;
 	justify-content: center;
 }
 
-// -- mixins
-@mixin size($width, $height) {
-  height: $height;
-  width: $width;
-}
-
-@mixin draw-progress($progress, $color) {
-  .pie {
-    .half-circle {
-      border-color: $color;
-    }
-
-    .left-side {
-	    z-index: 1;
-      transform: rotate($progress * 3.6deg);
-    }
-
-    @if $progress <= 50 {
-      .right-side {
-        display: none;
-      }
-    } @else {
-      clip: rect(auto, auto, auto, auto);
-
-      .right-side {
-        transform: rotate(180deg);
-      }
-    }
-  }
-}
-
-@mixin draw-progress--solid($progress, $color, $bg-color) {
-  background: linear-gradient(to right, $color 50%, $bg-color 50%);
-
-  &:before {
-    @if $progress <= 50 {
-      background: $bg-color;
-      transform: rotate((100 - (50 - $progress)) / 100 * 360deg * -1);
-    } @else {
-      background: $color;
-      transform: rotate((100 - $progress) / 100 * 360deg);
-    }
-  }
-}
-
-// -- selectors
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
 
 html,
 body {
@@ -83,74 +27,56 @@ body {
   padding: 10px;
 }
 
-.pie-wrapper {
-  @include size($default-size, $default-size);
-  float: left;
-  margin: 15px;
-  position: relative;
 
-  &:nth-child(3n + 1) {
-    clear: both;
+$offset: 187;
+$duration: 1.4s;
+
+.spinner {
+  transform: rotate(-90deg);
+  .path {
+    stroke-dasharray: $offset;
+    stroke: #F7C223;
+    // stroke-dashoffset: $offset;
+    stroke-dashoffset: 187;
+  }
+}
+
+.animation {
+  &.spinner {
+    animation: rotator $duration linear infinite;
   }
 
-  .pie {
-    @include size(100%, 100%);
-    clip: rect(0, $default-size, $default-size, $default-size / 2);
-    left: 0;
-    position: absolute;
-    top: 0;
-
-    .half-circle {
-      @include size(100%, 100%);
-      border: ($default-size / 10) solid #3498db;
-      border-radius: 50%;
-      clip: rect(0, $default-size / 2, $default-size, 0);
-      left: 0;
-      position: absolute;
-      top: 0;
-    }
+  .path {
+    stroke-dasharray: $offset;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    animation:
+      dash $duration ease-in-out infinite,
+      colors ($duration*4) ease-in-out infinite;
   }
+}
 
-  .label {
-    background: $bg-color;
-    border-radius: 50%;
-    bottom: $label-font-size-redo / 10;
-    color: #ecf0f1;
-    cursor: default;
-    display: block;
-    font-size: $label-font-size;
-    left: $label-font-size-redo / 10;
-    line-height: $label-font-size-redo * .70;
-    position: absolute;
-    right: $label-font-size-redo / 10;
-    text-align: center;
-    top: $label-font-size-redo / 10;
+@keyframes rotator {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(270deg); }
+}
 
-    .smaller {
-      color: #bdc3c7;
-      font-size: .45em;
-      padding-bottom: 20px;
-      vertical-align: super;
-    }
-  }
+@keyframes colors {
+	0% { stroke: #4285F4; }
+	25% { stroke: #DE3E35; }
+	50% { stroke: #F7C223; }
+	75% { stroke: #1B9A59; }
+  100% { stroke: #4285F4; }
+}
 
-  .shadow {
-    @include size(100%, 100%);
-    border: $default-size / 10 solid #bdc3c7;
-    border-radius: 50%;
-  }
-
-  &.style-2 {
-    .label {
-      background: none;
-      color: #7f8c8d;
-
-      .smaller {
-        color: #bdc3c7;
-      }
-    }
-  }
-
-
-  @include draw-progress(95, #e74c3c);
+@keyframes dash {
+ 0% { stroke-dashoffset: $offset; }
+ 50% {
+   stroke-dashoffset: $offset/4;
+   transform:rotate(135deg);
+ }
+ 100% {
+   stroke-dashoffset: $offset;
+   transform:rotate(450deg);
+ }
 }
