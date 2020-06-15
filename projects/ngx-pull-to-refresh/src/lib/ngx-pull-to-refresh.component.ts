@@ -8,8 +8,7 @@ import { Subject } from 'rxjs';
 })
 export class NgxPullToRefreshComponent implements OnInit {
   @Input()
-  spinnerColor = 'red';
-  spinnerBackgroundColor = '#bdc3c7';
+  spinnerColor = '#F7C223';
 
   private isRefresh = false;
   private isScrollTop = false;
