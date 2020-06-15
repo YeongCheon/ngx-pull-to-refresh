@@ -1,7 +1,6 @@
 #+TITLE: README
 #+AUTHOR: yeongcheon
 
-
 * 소개
 
 모바일 환경에서 사용하는 당겨서 새로고침(pull to refresh) 라이브러리입니다.
@@ -9,12 +8,38 @@
 찾다찾다 맘에 드는게 없어서 하나 만들어봤어요. 점차 개선해나가겠습니다.
 
 * 예제
+[[./projects/example/src/app][link]]
+** app.component.html
+   #+BEGIN_SRC html
+   <ngx-pull-to-refresh [spinnerColor]="#ff0000" (refresh)="alert('refresh');" (loadMore)="alert('loadmore');">
+     <div style="height: 3000px">long content</div>
+   </ngx-pull-to-refresh>
+   #+END_SRC
+** app.component.ts
+   #+BEGIN_SRC typescript
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
 
-#+BEGIN_SRC html
-<ngx-pull-to-refresh [spinnerColor]="#ff0000" (refresh)="alert('refresh');" (loadMore)="alert('loadmore');">
-<div style="height: 3000px">long content</div>
-</ngx-pull-to-refresh>
-#+END_SRC
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+  title = 'example';
+
+  myRefreshEvent(event: Subject<any>, message: string) {
+    setTimeout(() => {
+      alert(message);
+      event.next();
+    }, 3000);
+  }
+
+  alert(message: string) {
+    alert(message);
+  }
+}
+   #+END_SRC
 
 * License
 
