@@ -38,7 +38,7 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.refreshCompleteSubject.subscribe(()=>{
+    this.refreshCompleteSubject.subscribe(() => {
       this.isPlayingAnimation = false;
       this.restoreWrapper();
       this.restoreLoadingbar();
@@ -46,7 +46,7 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   @HostListener('window:touchmove', ['$event'])
-  onTouchMove($event): void {
+  onTouchMove($event: any): void {
     const moveYDistance: number = this.touchStartScreenY - $event.touches[0].screenY;
     if (window.scrollY <= 0 && this.lastScrollTop <= 0) {
       this.isScrollTop = true;
@@ -68,7 +68,7 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   @HostListener('window:scroll', ['$event'])
-  onScroll($event): void {
+  onScroll($event: any): void {
     this.isOnScrollBottom = window.scrollY >= 0 &&
       (window.scrollY + window.innerHeight) >= document.scrollingElement.scrollHeight * 0.9;
 
@@ -81,13 +81,13 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   @HostListener('window:touchstart', ['$event'])
-  onTouchStart($event): void {
+  onTouchStart($event: any): void {
     this.isRefresh = false;
     this.touchStartScreenY = $event.touches[0].screenY;
   }
 
   @HostListener('window:touchend', ['$event'])
-  onMouseup($event): void {
+  onMouseup($event: any): void {
     if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
       this.refreshFunction();
     } else {
@@ -97,7 +97,6 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   moveWrapper(offsetY: number): void {
-    const wrapper: HTMLElement = this.wrapperElement.nativeElement;
     const loadingbar: HTMLElement = this.loadingbar.nativeElement;
 
     let loadingbarY: number = offsetY;
@@ -122,7 +121,6 @@ export class NgxPullToRefreshComponent implements OnInit {
 
   restoreLoadingbar(): void {
     const loadingbar: HTMLElement = this.loadingbar.nativeElement;
-    // const loadingIcon: HTMLElement = this.loadingIcon.nativeElement;
     loadingbar.style.display = 'none';
 
     this.scrollPullPercent = 0;

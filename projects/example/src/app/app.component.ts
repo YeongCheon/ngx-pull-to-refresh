@@ -10,7 +10,7 @@ export class AppComponent {
   title = 'example';
 
   myRefreshEvent(event: Subject<any>, message: string) {
-    setTimeout(()=>{
+    setTimeout(() => {
       alert(message);
       event.next();
     }, 3000);
