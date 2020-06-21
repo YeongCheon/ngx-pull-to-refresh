@@ -11,7 +11,7 @@
 [[./projects/example/src/app][link]]
 ** app.component.html
    #+BEGIN_SRC html
-   <ngx-pull-to-refresh [spinnerColor]="#ff0000" (refresh)="myRefreshEvent($event, 'refresh');" (loadMore)="alert('loadmore');">
+   <ngx-pull-to-refresh spinnerColor="#ff0000" spinnerSize="100px" (refresh)="myRefreshEvent($event, 'refresh');" (loadMore)="alert('loadmore');">
      <div style="height: 3000px">long content</div>
    </ngx-pull-to-refresh>
    #+END_SRC
