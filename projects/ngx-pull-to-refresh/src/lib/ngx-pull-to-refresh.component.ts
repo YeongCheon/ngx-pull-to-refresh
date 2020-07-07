@@ -12,6 +12,9 @@ export class NgxPullToRefreshComponent implements OnInit {
     @Input()
     spinnerSize = '50px';
 
+    @Input()
+    targetElement: Element;
+
     private isRefresh = false;
     private isScrollTop = false;
     private isOnScrollBottom = false;
@@ -36,6 +39,8 @@ export class NgxPullToRefreshComponent implements OnInit {
     refreshCompleteSubject = new Subject();
     @Output() loadMore: EventEmitter<any> = new EventEmitter<any>();
 
+    private ele: Element;
+
     constructor() {
     }
 
@@ -46,24 +51,26 @@ export class NgxPullToRefreshComponent implements OnInit {
             this.restoreLoadingbar();
         });
 
-        this.wrapperElement.nativeElement.addEventListener('touchstart', (evt: any) => {
+        this.ele = this.targetElement ?? this.wrapperElement.nativeElement;
+
+        this.ele.addEventListener('touchstart', (evt: any) => {
             this.onTouchStart(evt);
         });
-        this.wrapperElement.nativeElement.addEventListener('touchmove', (evt: any) => {
+        this.ele.addEventListener('touchmove', (evt: any) => {
             this.onTouchMove(evt);
         });
-        this.wrapperElement.nativeElement.addEventListener('scroll', (evt: any) => {
+        this.ele.addEventListener('scroll', (evt: any) => {
             this.onScroll(evt);
         });
-        this.wrapperElement.nativeElement.addEventListener('touchend', (evt: any) => {
+        this.ele.addEventListener('touchend', (evt: any) => {
             this.onMouseup(evt);
         });
     }
 
-    // @HostListener('window:touchmove', ['$event'])
     onTouchMove($event: any): void {
         const moveYDistance: number = this.touchStartScreenY - $event.touches[0].screenY;
-        if (window.scrollY <= 0 && this.lastScrollTop <= 0) {
+        const scrollY = this.ele.scrollTop;
+        if (scrollY <= 0 && this.lastScrollTop <= 0) {
             this.isScrollTop = true;
         } else {
             this.isScrollTop = false;
@@ -75,18 +82,17 @@ export class NgxPullToRefreshComponent implements OnInit {
             this.isRefresh = false;
         }
 
-        this.lastScrollTop = window.scrollY;
+        this.lastScrollTop = scrollY;
 
         this.moveWrapper(moveYDistance * -1);
 
         this.drawCircle(this.scrollPullPercent);
     }
 
-    // @HostListener('window:scroll', ['$event'])
     onScroll($event: any): void {
-        this.isOnScrollBottom = window.scrollY >= 0 &&
-            (window.scrollY + window.innerHeight) >= document.scrollingElement.scrollHeight * 0.9;
-
+        const scrollY = this.ele.scrollTop;
+        this.isOnScrollBottom = scrollY >= 0 &&
+            this.ele.clientHeight + this.ele.scrollTop >= this.ele.scrollHeight;
 
         if (this.isOnScrollBottom &&
             this.loadMoreFunction &&
@@ -95,18 +101,16 @@ export class NgxPullToRefreshComponent implements OnInit {
         }
     }
 
-    // @HostListener('window:touchstart', ['$event'])
     onTouchStart($event: any): void {
         this.isRefresh = false;
         this.touchStartScreenY = $event.touches[0].screenY;
     }
 
-    // @HostListener('window:touchend', ['$event'])
     onMouseup($event: any): void {
         if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
             this.refreshFunction();
         } else {
-            this.restoreWrapper();
+            // this.restoreWrapper();
             this.restoreLoadingbar();
         }
     }
@@ -118,6 +122,7 @@ export class NgxPullToRefreshComponent implements OnInit {
         if (offsetY >= this.DISTANCE_FOR_REFRESH) {
             loadingbarY = this.DISTANCE_FOR_REFRESH;
         }
+
 
         if (this.isScrollTop && offsetY >= 0) {
             loadingbar.style.display = this.LOADINGBAR_DISPLAY_STYLE;
