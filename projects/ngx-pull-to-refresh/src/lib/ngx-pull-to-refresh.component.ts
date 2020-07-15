@@ -92,7 +92,7 @@ export class NgxPullToRefreshComponent implements OnInit {
     onScroll($event: any): void {
         const scrollY = this.ele.scrollTop;
         this.isOnScrollBottom = scrollY >= 0 &&
-            this.ele.clientHeight + this.ele.scrollTop >= this.ele.scrollHeight;
+            this.ele.clientHeight + this.ele.scrollTop >= this.ele.scrollHeight * 0.85;
 
         if (this.isOnScrollBottom &&
             this.loadMoreFunction &&
