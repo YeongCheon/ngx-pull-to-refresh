@@ -59,7 +59,7 @@ export class NgxPullToRefreshComponent implements OnInit {
         this.ele.addEventListener('touchmove', (evt: any) => {
             this.onTouchMove(evt);
         });
-        this.ele.addEventListener('scroll', (evt: any) => {
+        window.addEventListener('scroll', (evt: any) => {
             this.onScroll(evt);
         });
         this.ele.addEventListener('touchend', (evt: any) => {
