@@ -14,6 +14,8 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     @Input()
     targetElement: Element;
+    @Input()
+    isEnable = true;
 
     private isRefresh = false;
     private isScrollTop = false;
@@ -68,6 +70,9 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     onTouchMove($event: any): void {
+        if (!this.isEnable) {
+            return;
+        }
         const moveYDistance: number = this.touchStartScreenY - $event.touches[0].screenY;
         const scrollY = this.ele.scrollTop;
         if (scrollY <= 0 && this.lastScrollTop <= 0) {
@@ -90,6 +95,10 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     onScroll($event: any): void {
+        if (!this.isEnable) {
+            return;
+        }
+
         const scrollY = this.ele.scrollTop;
         this.isOnScrollBottom = scrollY >= 0 &&
             this.ele.clientHeight + this.ele.scrollTop >= this.ele.scrollHeight * 0.85;
@@ -102,11 +111,19 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     onTouchStart($event: any): void {
+        if (!this.isEnable) {
+            return;
+        }
+
         this.isRefresh = false;
         this.touchStartScreenY = $event.touches[0].screenY;
     }
 
     onMouseup($event: any): void {
+        if (!this.isEnable) {
+            return;
+        }
+
         if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
             this.refreshFunction();
         } else {
