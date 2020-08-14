@@ -7,6 +7,25 @@
 
 찾다찾다 맘에 드는게 없어서 하나 만들어봤어요. 점차 개선해나가겠습니다.
 
+* 속성
+** Input
+  | Attribute     | Necessary | type    | Default value | Description                    |
+  |---------------+-----------+---------+---------------+--------------------------------|
+  | spinnerSize   | no        | string  | '50px'        |                                |
+  | targetElement | no        | Element | self element  | target element for emit event. |
+
+** Output
+   +-----------+--------------+-----------------------------------+
+   | Attribute | type         | Description                       |
+   +-----------+--------------+-----------------------------------+
+   | refresh   | EventEmitter |emitter for pull to refresh event. |
+   |           |              |must call ~$event.next()~ for hide |
+   |           |              |spinner progress bar.              |
+   +-----------+--------------+-----------------------------------+
+   | loadMore  | EventEmitter | emitter for infinite scroll event |
+   +-----------+--------------+-----------------------------------+
+
+
 * 예제
 [[./projects/example/src/app][link]]
 ** app.component.html
