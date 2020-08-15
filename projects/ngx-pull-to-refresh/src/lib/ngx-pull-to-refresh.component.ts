@@ -1,6 +1,36 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, HostListener, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 
+function toFit(
+    cb,
+    { dismissCondition = () => false, triggerCondition = () => true }
+) {
+    if (!cb) {
+        throw Error('Invalid required arguments')
+    }
+
+    let tick = false
+
+    return function(e) {
+        if (tick) {
+            return
+        }
+
+        tick = true
+        return requestAnimationFrame(() => {
+            if (dismissCondition()) {
+                tick = false
+                return
+            }
+
+            if (triggerCondition()) {
+                tick = false
+                return cb(e)
+            }
+        })
+    }
+}
+
 @Component({
     selector: 'ngx-pull-to-refresh',
     templateUrl: './ngx-pull-to-refresh.component.html',
@@ -55,14 +85,27 @@ export class NgxPullToRefreshComponent implements OnInit {
 
         this.ele = this.targetElement ?? this.wrapperElement.nativeElement;
 
-        this.ele.addEventListener('touchstart', (evt: any) => {
-            this.onTouchStart(evt);
-        });
-        this.ele.addEventListener('touchmove', (evt: any) => {
-            this.onTouchMove(evt);
-        });
-
-        console.log(this.ele);
+        this.ele.addEventListener('touchstart',
+            toFit(
+                (evt: any) => { this.onTouchStart(evt) },
+                {
+                    dismissCondition: () => { return false },
+                    triggerCondition: () => { return true },
+                }),
+            { passive: true }
+        );
+        this.ele.addEventListener(
+            'touchmove',
+            toFit(
+                (evt: any) => {
+                    this.onTouchMove(evt);
+                },
+                {
+                    dismissCondition: () => { return false },
+                    triggerCondition: () => { return true },
+                }),
+            { passive: true }
+        );
 
         let scrollTarget: any;
         if (this.ele.tagName == 'HTML') {
@@ -72,9 +115,14 @@ export class NgxPullToRefreshComponent implements OnInit {
         }
 
         // window.addEventListener('scroll', (evt: any) => {
-        scrollTarget.addEventListener('scroll', (evt: any) => {
-            this.onScroll(evt);
-        });
+        scrollTarget.addEventListener('scroll', toFit(
+            (evt: any) => { this.onScroll(evt); },
+            {
+                dismissCondition: () => { return false },
+                triggerCondition: () => { return true },
+            }),
+            { passive: true }
+        );
         this.ele.addEventListener('touchend', (evt: any) => {
             this.onMouseup(evt);
         });
