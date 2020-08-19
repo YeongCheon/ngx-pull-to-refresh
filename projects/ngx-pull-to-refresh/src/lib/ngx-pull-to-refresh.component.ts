@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, HostListener, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 
 function toFit(
@@ -114,7 +114,6 @@ export class NgxPullToRefreshComponent implements OnInit {
             scrollTarget = this.ele;
         }
 
-        // window.addEventListener('scroll', (evt: any) => {
         scrollTarget.addEventListener('scroll', toFit(
             (evt: any) => { this.onScroll(evt); },
             {
@@ -129,7 +128,16 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     onTouchMove($event: any): void {
-        if (!this.isEnable) {
+        let isContainWrapper = false;
+        $event.path?.forEach((item: any) => {
+            if (item === this.wrapperElement.nativeElement) {
+                isContainWrapper = true;
+            }
+        });
+
+        if (!isContainWrapper) {
+            return;
+        } else if (!this.isEnable) {
             return;
         }
         const moveYDistance: number = this.touchStartScreenY - $event.touches[0].screenY;
@@ -170,7 +178,16 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     onTouchStart($event: any): void {
-        if (!this.isEnable) {
+        let isContainWrapper = false;
+        $event.path?.forEach((item: any) => {
+            if (item === this.wrapperElement.nativeElement) {
+                isContainWrapper = true;
+            }
+        });
+
+        if (!isContainWrapper) {
+            return;
+        } else if (!this.isEnable) {
             return;
         }
 
@@ -179,7 +196,16 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     onMouseup($event: any): void {
-        if (!this.isEnable) {
+        let isContainWrapper = false;
+        $event.path?.forEach((item: any) => {
+            if (item === this.wrapperElement.nativeElement) {
+                isContainWrapper = true;
+            }
+        });
+
+        if (!isContainWrapper) {
+            return;
+        } else if (!this.isEnable) {
             return;
         }
 
