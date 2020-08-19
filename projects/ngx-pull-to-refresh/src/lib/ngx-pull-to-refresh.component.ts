@@ -129,7 +129,8 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     onTouchMove($event: any): void {
         let isContainWrapper = false;
-        $event.path?.forEach((item: any) => {
+        const path = this.getParentElementList($event.srcElement);
+        path?.forEach((item: any) => {
             if (item === this.wrapperElement.nativeElement) {
                 isContainWrapper = true;
             }
@@ -179,7 +180,8 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     onTouchStart($event: any): void {
         let isContainWrapper = false;
-        $event.path?.forEach((item: any) => {
+        const path = this.getParentElementList($event.srcElement);
+        path?.forEach((item: any) => {
             if (item === this.wrapperElement.nativeElement) {
                 isContainWrapper = true;
             }
@@ -197,7 +199,9 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     onMouseup($event: any): void {
         let isContainWrapper = false;
-        $event.path?.forEach((item: any) => {
+
+        const path = this.getParentElementList($event.srcElement);
+        path?.forEach((item: any) => {
             if (item === this.wrapperElement.nativeElement) {
                 isContainWrapper = true;
             }
@@ -261,5 +265,17 @@ export class NgxPullToRefreshComponent implements OnInit {
     private drawCircle(percentage: number) {
         const offset = this.CIRCLE_OFFSET - (this.CIRCLE_OFFSET * (Math.abs(percentage) / 100));
         this.circleSvgElement.nativeElement.style.strokeDashoffset = offset;
+    }
+
+    private getParentElementList(srcElement: any): any[] {
+        const parents = [];
+        let elem = srcElement;
+
+        while (elem?.parentElement && elem.parentNode.nodeName.toLowerCase() != 'body') {
+            elem = elem.parentElement;
+            parents.push(elem);
+        }
+
+        return parents;
     }
 }
