@@ -122,9 +122,15 @@ export class NgxPullToRefreshComponent implements OnInit {
             }),
             { passive: true }
         );
-        this.ele.addEventListener('touchend', (evt: any) => {
-            this.onMouseup(evt);
-        });
+
+        this.ele.addEventListener('touchend', toFit(
+            (evt: any) => { this.onMouseup(evt); },
+            {
+                dismissCondition: () => { return false },
+                triggerCondition: () => { return true },
+            }),
+            { passive: true }
+        );
     }
 
     onTouchMove($event: any): void {
@@ -208,8 +214,10 @@ export class NgxPullToRefreshComponent implements OnInit {
         });
 
         if (!isContainWrapper) {
+            // this.restoreLoadingbar();
             return;
         } else if (!this.isEnable) {
+            // this.restoreLoadingbar();
             return;
         }
 
