@@ -1,0 +1,106 @@
+#+TITLE: README
+#+AUTHOR: yeongcheon
+#+DATE: 2020-11-29 17:00:00 +0900
+
+* ngx-pull-to-refresh
+
+ngx-pull-to-refresh is angular component look like [[https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout?hl=ko][Swiperefreshlayout]].
+
+** Getting Started
+
+1. install package
+   #+BEGIN_SRC bash
+   npm install ngx-pull-to-refresh
+   #+END_SRC
+
+2. import module
+   #+BEGIN_SRC typescript
+import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh.module';
+
+@NgModule({
+  declarations: [
+    ...
+  ],
+  imports: [
+    NgxPullToRefreshModule,
+    ...
+  ],
+})
+export class YourModule { }
+   #+END_SRC
+
+3. use ~ngx-pull-to-refresh~ tag in your project
+   * TS
+   #+BEGIN_SRC typescript
+import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+    title = 'example';
+    targetElement: Element;
+
+    ngOnInit() {
+        this.targetElement = document.querySelector('html');
+    }
+
+    myRefreshEvent(event: Subject<any>, message: string) {
+        setTimeout(() => {
+            alert(message);
+            event.next();
+        }, 3000);
+    }
+
+    alert(message: string) {
+        alert(message);
+    }
+}
+   #+END_SRC
+
+   * HTML
+   #+BEGIN_SRC html
+<ngx-pull-to-refresh
+	spinnerColor="#ff0000"
+	spinnerSize="50px"
+	distanceForRefresh="40"
+	[isEnable]="true"
+	[targetElement]="targetElement"
+	(refresh)="myRefreshEvent($event, 'refresh')"
+	(loadMore)="alert('loadmore')"
+	style="display:block;height:100%;">
+  <div style="height: 3000px">long content</div>
+</ngx-pull-to-refresh>
+   #+END_SRC
+
+** Attribute
+*** Input
+| Attribute            | Type    | Default value | Description                                                                                                      |
+|----------------------+---------+---------------+------------------------------------------------------------------------------------------------------------------|
+| ~spinnerColor~       | string  | #F7C223       | refresh spinner color.                                                                                           |
+| ~spinnnerSize~       | string  | 50px          | refresh spinner size.                                                                                            |
+| ~distanceForRefresh~ | number  | 40            | distance for refresh trigger event.                                                                              |
+| ~isEnable~           | boolean | true          |                                                                                                                  |
+| ~targetElement~      | Object  | SELF          | Don't use it normally. if you have any problems with event occurrence, enter a ~window~ object in this property. |
+
+*** Output
+| Attribute | Description                                                                                        |
+|-----------+----------------------------------------------------------------------------------------------------|
+| refresh   | callback event when pulled distance of ~targetElement~ is greater than ~distanceForRefresh~.       |
+| loadMore  | callback event when ~scrollTop~ value is greater than ~scrollHeight~ of ~ngx-pull-to-refresh~ tag. |
+
+
+* License
+
+  The MIT License (MIT)
+
+  Copyright (c) 2019 YeongCheon Kim
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
