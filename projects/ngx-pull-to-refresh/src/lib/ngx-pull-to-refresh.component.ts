@@ -44,8 +44,18 @@ export class NgxPullToRefreshComponent implements OnInit {
 
   @Input()
   targetElement: Element;
+  _isEnable = true;
+
   @Input()
-  isEnable = true;
+  set isEnable(value: boolean) {
+    this._isEnable = value;
+
+    if (this._isEnable) {
+      this.addEventListener();
+    } else {
+      this.removeEventListener();
+    }
+  }
 
   private isRefresh = false;
   private isScrollTop = false;
@@ -74,6 +84,36 @@ export class NgxPullToRefreshComponent implements OnInit {
 
   private ele: Element;
 
+  touchstartEvent = toFit(
+    (evt: any) => { this.onTouchStart(evt) },
+    {
+      dismissCondition: () => { return false },
+      triggerCondition: () => { return true },
+    })
+
+  touchmoveEvent = toFit(
+    (evt: any) => {
+      this.onTouchMove(evt);
+    },
+    {
+      dismissCondition: () => { return false },
+      triggerCondition: () => { return true },
+    });
+
+  scrollEvent = toFit(
+    (evt: any) => { this.onScroll(evt); },
+    {
+      dismissCondition: () => { return false },
+      triggerCondition: () => { return true },
+    });
+
+  touchendEvent = toFit(
+    (evt: any) => { this.onMouseup(evt); },
+    {
+      dismissCondition: () => { return false },
+      triggerCondition: () => { return true },
+    });
+
   constructor() {
   }
 
@@ -85,53 +125,11 @@ export class NgxPullToRefreshComponent implements OnInit {
     });
 
     this.ele = this.targetElement ?? this.wrapperElement.nativeElement;
-
-    this.ele.addEventListener('touchstart',
-      toFit(
-        (evt: any) => { this.onTouchStart(evt) },
-        {
-          dismissCondition: () => { return false },
-          triggerCondition: () => { return true },
-        }),
-      { passive: true }
-    );
-    this.ele.addEventListener(
-      'touchmove',
-      toFit(
-        (evt: any) => {
-          this.onTouchMove(evt);
-        },
-        {
-          dismissCondition: () => { return false },
-          triggerCondition: () => { return true },
-        }),
-      { passive: true }
-    );
-
-    let scrollTarget: any;
-    if (this.ele.tagName == 'HTML') {
-      scrollTarget = window;
+    if (this._isEnable) {
+      this.addEventListener();
     } else {
-      scrollTarget = this.ele;
+      this.removeEventListener();
     }
-
-    scrollTarget.addEventListener('scroll', toFit(
-      (evt: any) => { this.onScroll(evt); },
-      {
-        dismissCondition: () => { return false },
-        triggerCondition: () => { return true },
-      }),
-      { passive: true }
-    );
-
-    this.ele.addEventListener('touchend', toFit(
-      (evt: any) => { this.onMouseup(evt); },
-      {
-        dismissCondition: () => { return false },
-        triggerCondition: () => { return true },
-      }),
-      { passive: true }
-    );
   }
 
   onTouchMove($event: any): void {
@@ -145,7 +143,7 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     if (!isContainWrapper) {
       return;
-    } else if (!this.isEnable) {
+    } else if (!this._isEnable) {
       return;
     }
     const moveYDistance: number = this.touchStartScreenY - $event.touches[0].screenY;
@@ -170,7 +168,7 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   onScroll($event: any): void {
-    if (!this.isEnable) {
+    if (!this._isEnable) {
       return;
     }
 
@@ -196,7 +194,7 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     if (!isContainWrapper) {
       return;
-    } else if (!this.isEnable) {
+    } else if (!this._isEnable) {
       return;
     }
 
@@ -217,7 +215,7 @@ export class NgxPullToRefreshComponent implements OnInit {
     if (!isContainWrapper) {
       // this.restoreLoadingbar();
       return;
-    } else if (!this.isEnable) {
+    } else if (!this._isEnable) {
       // this.restoreLoadingbar();
       return;
     }
@@ -286,5 +284,40 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
 
     return parents;
+  }
+
+  private addEventListener() {
+    this.ele.addEventListener('touchstart',
+      this.touchstartEvent,
+      { passive: true }
+    );
+    this.ele.addEventListener(
+      'touchmove',
+      this.touchmoveEvent,
+      { passive: true }
+    );
+
+    let scrollTarget: any;
+    if (this.ele.tagName == 'HTML') {
+      scrollTarget = window;
+    } else {
+      scrollTarget = this.ele;
+    }
+
+    scrollTarget.addEventListener('scroll', this.scrollEvent,
+      { passive: true }
+    );
+
+    this.ele.addEventListener('touchend', this.touchendEvent,
+      { passive: true }
+    );
+  }
+
+  private removeEventListener() {
+    this.ele.removeEventListener('touchstart', this.touchstartEvent);
+    this.ele.removeEventListener('touchmove', this.touchmoveEvent);
+    this.ele.removeEventListener('scroll', this.scrollEvent);
+    this.ele.removeEventListener('touchend', this.touchendEvent);
+
   }
 }

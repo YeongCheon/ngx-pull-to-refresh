@@ -2,26 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    title = 'example';
-    targetElement: Element;
+  isEnable = true;
+  title = 'example';
+  targetElement: Element;
 
-    ngOnInit() {
-        this.targetElement = document.querySelector('html');
-    }
+  ngOnInit() {
+    this.targetElement = document.querySelector('html');
+  }
 
-    myRefreshEvent(event: Subject<any>, message: string) {
-        setTimeout(() => {
-            alert(message);
-            event.next();
-        }, 3000);
-    }
+  myRefreshEvent(event: Subject<any>, message: string) {
+    setTimeout(() => {
+      alert(message);
+      event.next();
+    }, 3000);
+  }
 
-    alert(message: string) {
-        alert(message);
-    }
+  alert(message: string) {
+    alert(message);
+  }
 }

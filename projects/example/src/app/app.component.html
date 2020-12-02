@@ -1,8 +1,15 @@
+<button type="button" (click)="isEnable = true;">enable</button>
+<button type="button" (click)="isEnable = false;">disable</button>
+<div>
+  isEnable: {{isEnable}}
+</div>
+
+
 <ngx-pull-to-refresh
 	spinnerColor="#ff0000"
 	spinnerSize="50px"
   distanceForRefresh="40"
-	[isEnable]="true"
+	[isEnable]="isEnable"
 	[targetElement]="targetElement"
 	(refresh)="myRefreshEvent($event, 'refresh')"
 	(loadMore)="alert('loadmore')"
