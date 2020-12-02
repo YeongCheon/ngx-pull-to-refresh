@@ -42,8 +42,20 @@ export class NgxPullToRefreshComponent implements OnInit {
   @Input()
   spinnerSize = '50px';
 
+  _targetElement: Element;
   @Input()
-  targetElement: Element;
+  set targetElement(value: Element) {
+    this.removeEventListener();
+
+    this._targetElement = value;
+    this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
+
+    if (this._isEnable) {
+      this.addEventListener();
+    } else {
+      this.removeEventListener();
+    }
+  }
   _isEnable = true;
 
   @Input()
@@ -124,7 +136,7 @@ export class NgxPullToRefreshComponent implements OnInit {
       this.restoreLoadingbar();
     });
 
-    this.ele = this.targetElement ?? this.wrapperElement.nativeElement;
+    this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
     if (this._isEnable) {
       this.addEventListener();
     } else {
@@ -287,37 +299,24 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   private addEventListener() {
-    this.ele.addEventListener('touchstart',
-      this.touchstartEvent,
-      { passive: true }
-    );
-    this.ele.addEventListener(
-      'touchmove',
-      this.touchmoveEvent,
-      { passive: true }
-    );
+    this.ele?.addEventListener('touchstart', this.touchstartEvent, { passive: true });
+    this.ele?.addEventListener('touchmove', this.touchmoveEvent, { passive: true });
 
     let scrollTarget: any;
-    if (this.ele.tagName == 'HTML') {
+    if (this.ele?.tagName == 'HTML') {
       scrollTarget = window;
     } else {
       scrollTarget = this.ele;
     }
 
-    scrollTarget.addEventListener('scroll', this.scrollEvent,
-      { passive: true }
-    );
-
-    this.ele.addEventListener('touchend', this.touchendEvent,
-      { passive: true }
-    );
+    scrollTarget?.addEventListener('scroll', this.scrollEvent, { passive: true });
+    this.ele?.addEventListener('touchend', this.touchendEvent, { passive: true });
   }
 
   private removeEventListener() {
-    this.ele.removeEventListener('touchstart', this.touchstartEvent);
-    this.ele.removeEventListener('touchmove', this.touchmoveEvent);
-    this.ele.removeEventListener('scroll', this.scrollEvent);
-    this.ele.removeEventListener('touchend', this.touchendEvent);
-
+    this.ele?.removeEventListener('touchstart', this.touchstartEvent);
+    this.ele?.removeEventListener('touchmove', this.touchmoveEvent);
+    this.ele?.removeEventListener('scroll', this.scrollEvent);
+    this.ele?.removeEventListener('touchend', this.touchendEvent);
   }
 }
