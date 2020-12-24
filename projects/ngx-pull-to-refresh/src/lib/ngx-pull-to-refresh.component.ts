@@ -151,7 +151,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy');
+    this.clearAllEvent();
   }
 
   onTouchMove($event: any): void {
@@ -162,8 +162,6 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
         isContainWrapper = true;
       }
     });
-
-    console.log($event);
 
     if (!isContainWrapper) {
       return;
