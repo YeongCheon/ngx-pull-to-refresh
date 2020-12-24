@@ -1,18 +1,4 @@
-<button type="button" (click)="isEnable = true;">enable</button>
-<button type="button" (click)="isEnable = false;">disable</button>
-<div>
-  isEnable: {{isEnable}}
-</div>
+<h1><a routerLink="/a">A</a></h1>
+<h1><a routerLink="/b">B</a></h1>
 
-
-<ngx-pull-to-refresh
-	spinnerColor="#ff0000"
-	spinnerSize="50px"
-  distanceForRefresh="40"
-	[isEnable]="isEnable"
-	[targetElement]="targetElement"
-	(refresh)="myRefreshEvent($event, 'refresh')"
-	(loadMore)="alert('loadmore')"
-	style="display:block;height:100%;">
-  <div style="height: 3000px">long content</div>
-</ngx-pull-to-refresh>
+<router-outlet></router-outlet>

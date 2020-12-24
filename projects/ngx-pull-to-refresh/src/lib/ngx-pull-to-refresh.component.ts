@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 function toFit(
@@ -36,7 +36,12 @@ function toFit(
   templateUrl: './ngx-pull-to-refresh.component.html',
   styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
-export class NgxPullToRefreshComponent implements OnInit {
+export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
+  static touchstartEventList = [];
+  static touchmoveEventList = [];
+  static scrollEventList = [];
+  static touchendEventList = [];
+
   @Input()
   spinnerColor = '#F7C223';
   @Input()
@@ -130,6 +135,7 @@ export class NgxPullToRefreshComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.clearAllEvent();
     this.refreshCompleteSubject.subscribe(() => {
       this.isPlayingAnimation = false;
       this.restoreWrapper();
@@ -144,6 +150,10 @@ export class NgxPullToRefreshComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+  }
+
   onTouchMove($event: any): void {
     let isContainWrapper = false;
     const path = this.getParentElementList($event.srcElement);
@@ -152,6 +162,8 @@ export class NgxPullToRefreshComponent implements OnInit {
         isContainWrapper = true;
       }
     });
+
+    console.log($event);
 
     if (!isContainWrapper) {
       return;
@@ -311,6 +323,12 @@ export class NgxPullToRefreshComponent implements OnInit {
 
     scrollTarget?.addEventListener('scroll', this.scrollEvent, { passive: true });
     this.ele?.addEventListener('touchend', this.touchendEvent, { passive: true });
+
+
+    NgxPullToRefreshComponent.touchstartEventList.push(this.touchstartEvent);
+    NgxPullToRefreshComponent.touchmoveEventList.push(this.touchmoveEvent);
+    NgxPullToRefreshComponent.scrollEventList.push(this.scrollEvent);
+    NgxPullToRefreshComponent.touchendEventList.push(this.touchendEvent);
   }
 
   private removeEventListener() {
@@ -318,5 +336,20 @@ export class NgxPullToRefreshComponent implements OnInit {
     this.ele?.removeEventListener('touchmove', this.touchmoveEvent);
     this.ele?.removeEventListener('scroll', this.scrollEvent);
     this.ele?.removeEventListener('touchend', this.touchendEvent);
+  }
+
+  private clearAllEvent() {
+    NgxPullToRefreshComponent.touchstartEventList.forEach((evt) => {
+      this.ele?.removeEventListener('touchstart', evt);
+    });
+    NgxPullToRefreshComponent.touchmoveEventList.forEach((evt) => {
+      this.ele?.removeEventListener('touchmove', evt);
+    });
+    NgxPullToRefreshComponent.scrollEventList.forEach((evt) => {
+      this.ele?.removeEventListener('scroll', evt);
+    });
+    NgxPullToRefreshComponent.touchendEventList.forEach((evt) => {
+      this.ele?.removeEventListener('touchend', evt);
+    });
   }
 }
