@@ -135,7 +135,6 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.clearAllEvent();
     this.refreshCompleteSubject.subscribe(() => {
       this.isPlayingAnimation = false;
       this.restoreWrapper();
@@ -151,7 +150,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.clearAllEvent();
+    this.removeEventListener();
   }
 
   onTouchMove($event: any): void {
