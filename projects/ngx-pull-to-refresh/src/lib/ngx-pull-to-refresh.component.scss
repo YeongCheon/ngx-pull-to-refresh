@@ -12,7 +12,6 @@ $transition-duration: 0.2s;
 .loadingbar-container {
   transition: all $transition-duration;
   transition-timing-function: linear;
-  transition-property: translateY;
   visibility: hidden;
   display: flex;
 	z-index:9999;
