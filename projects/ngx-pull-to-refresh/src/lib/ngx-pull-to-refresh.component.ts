@@ -216,9 +216,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   restoreWrapper(): void {
-    const wrapper: HTMLElement = this.wrapperElement.nativeElement;
-
-    wrapper.style.marginTop = '0px';
+    this.loadingbar.nativeElement.style.transform = `translateY(0px)`;
     this.hiddenLoadingbar();
   }
 
