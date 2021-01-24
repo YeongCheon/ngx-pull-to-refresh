@@ -7,9 +7,14 @@
 	height:100%;
 }
 
+$transition-duration: 0.2s;
+
 .loadingbar-container {
-	display:none; // or flex
-  // display: flex;
+  transition: all $transition-duration;
+  transition-timing-function: linear;
+  transition-property: translateY;
+  visibility: hidden;
+  display: flex;
 	z-index:9999;
 	position:absolute;
 	width:100%;
@@ -34,10 +39,12 @@ $duration: 1.4s;
 .spinner {
   transform: rotate(-90deg);
   .path {
+    transition: all $transition-duration ease-out;
+    // transition-timing-function: linear;
     stroke-dasharray: $offset;
     stroke: #F7C223;
     // stroke-dashoffset: $offset;
-    stroke-dashoffset: 187;
+    stroke-dashoffset: $offset;
   }
 }
 
