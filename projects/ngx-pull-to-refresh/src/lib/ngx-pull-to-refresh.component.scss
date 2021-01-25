@@ -1,17 +1,27 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
+$transition-duration: 0.2s;
 
 // source: https://codepen.io/mrrocks/pen/EiplA
 
 .str-container {
 	display:block;
+  width: 100%;
 	height:100%;
+  position: relative;
 }
 
-$transition-duration: 0.2s;
+.content-container {
+  width: 100%;
+  display: block;
+  position: relative;
+	height: 100%;
+  transition: transform $transition-duration ease-out;
+}
 
 .loadingbar-container {
-  transition: all $transition-duration ease-out;
+  transition: transform $transition-duration ease-out;
   // transition-timing-function: linear;
+  top: 0;
   visibility: hidden;
   display: flex;
 	z-index:9999;

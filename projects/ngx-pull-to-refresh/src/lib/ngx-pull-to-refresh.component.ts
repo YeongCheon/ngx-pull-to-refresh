@@ -14,8 +14,6 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
   @Input()
   spinnerColor = '#F7C223';
-  @Input()
-  spinnerSize = '50px';
 
   _targetElement: Element;
   @Input()
@@ -49,6 +47,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private isOnScrollBottom = false;
   @ViewChild('wrapper', { static: true })
   private wrapperElement: ElementRef;
+  @ViewChild('contentContainer')
+  private contentContainer: ElementRef<HTMLDivElement>;
   @ViewChild('loadingContainer')
   private loadingbar: ElementRef<HTMLDivElement>;
   @ViewChild('circle')
@@ -67,7 +67,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
   private ele: Element;
 
-  touchstartEvent = (evt)=>{
+  touchstartEvent = (evt: any)=>{
     this.onTouchStart(evt);
   }
 
@@ -75,13 +75,16 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     this.onTouchMove(evt);
   };
 
-  scrollEvent = (evt)=>{
+  scrollEvent = (evt: any)=>{
     this.onScroll(evt);
   };
 
-  touchendEvent = (evt)=>{
-    this.onMouseup(evt);
+  touchendEvent = (evt: any)=>{
+    this.onTouchEnd(evt);
   }
+
+  private distance: number = 0;
+  private startScreenY = 0;
 
   constructor() {}
 
@@ -106,51 +109,46 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     this.removeEventListener();
   }
 
-  lastScreenY: number = 0;
-  sum: number = 0;
   onTouchMove($event: TouchEvent): void {
-    if (!this._isEnable) {
+    if(this.isPlayingAnimation) {
+      return;
+    } else if (!this._isEnable) {
       return;
     }
 
     const currentScreenY = $event.touches[0].screenY;
 
-    // const moveYDistance: number = this.touchStartScreenY - $event.touches[0].screenY;
-    const moveYDistance = (this.lastScreenY - currentScreenY) * -1;
-    this.lastScreenY = currentScreenY;
-    if (scrollY <= 0 && this.sum > 0) {
+    if (scrollY <= 0 && this.distance > 0) {
       this.isScrollTop = true;
     } else {
       this.isScrollTop = false;
     }
 
-    if(!isNaN(moveYDistance)) {
-      this.sum += moveYDistance;
-    }
-
-    if (this.isScrollTop && this.sum >= this.distanceForRefresh) {
-      this.isRefresh = true;
-    } else {
-      this.isRefresh = false;
-    }
-
     const loadingbar = this.loadingbar.nativeElement;
 
-    if (this.sum >= this.distanceForRefresh && moveYDistance > 0) {
-      this.sum = this.distanceForRefresh;
-    }
-
-    if (this.isScrollTop && this.sum >= 0) {
-      loadingbar.style.visibility = "visible";
-      loadingbar.style.transform = `translateY(${this.sum}px)`;
-      // loadingbar.style.display = this.LOADINGBAR_DISPLAY_STYLE;
-      // loadingbar.style.top = loadingbarY.toString() + 'px';
+    if(this.startScreenY > currentScreenY) {
+      this.distance = 0;
     } else {
-      loadingbar.style.visibility = "hidden";
-      // loadingbar.style.display = "none";
+      this.distance = Math.abs(currentScreenY - this.startScreenY);
     }
 
-    this.scrollPullPercent = (this.sum / this.distanceForRefresh) * 100;
+    if(this.distance > this.distanceForRefresh) {
+      this.distance = this.distanceForRefresh;
+    }
+    this.isRefresh = this.isScrollTop && this.distance >= this.distanceForRefresh;
+
+    const contentContainerElement = this.contentContainer.nativeElement;
+
+    if (this.isScrollTop && this.distance >= 0) {
+      contentContainerElement.style.transform = `translateY(${this.distance}px)`;
+
+      loadingbar.style.visibility = "visible";
+    } else {
+      this.restoreWrapper();
+      loadingbar.style.visibility = "hidden";
+    }
+
+    this.scrollPullPercent = (this.distance / this.distanceForRefresh) * 100;
     this.isRefresh = this.scrollPullPercent >= 100 && this.isScrollTop;
 
     if(this.scrollPullPercent < 0) {
@@ -177,6 +175,9 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   onTouchStart($event: any): void {
+    if(this.isPlayingAnimation) {
+      return;
+    }
     let isContainWrapper = false;
     const path = this.getParentElementList($event.srcElement);
     path?.forEach((item: any) => {
@@ -194,11 +195,15 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     this.restoreWrapper();
     this.restoreLoadingbar();
     this.isRefresh = false;
-    this.lastScreenY = $event.touches[0].screenY;
-    this.sum = 0;
+    this.startScreenY = $event.touches[0].screenY;
+    this.distance = 0;
   }
 
-  onMouseup($event: Event): void {
+  onTouchEnd($event: Event): void {
+    if(this.isPlayingAnimation) {
+      return;
+    }
+
     if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
       this.refreshFunction();
     } else {
@@ -208,7 +213,9 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   restoreWrapper(): void {
-    this.loadingbar.nativeElement.style.transform = `translateY(0px)`;
+    this.contentContainer.nativeElement.style.position = "relative";
+    this.contentContainer.nativeElement.style.transform = `translateY(0)`;
+    // this.loadingbar.nativeElement.style.transform = `translateY(0px)`;
     this.hiddenLoadingbar();
   }
 

@@ -1,8 +1,10 @@
-<div #wrapper class="str-container" style="min-height:100%; overflow:scroll;">
+<div #wrapper class="str-container" style="min-height:100%; overflow:hidden;">
   <div #loadingContainer class="loadingbar-container">
-    <svg #spinner [class.animation]="isPlayingAnimation" class="spinner" [attr.width]="spinnerSize" [attr.height]="spinnerSize" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+    <svg #spinner [class.animation]="isPlayingAnimation" class="spinner" [attr.width]="distanceForRefresh*0.7" [attr.height]="distanceForRefresh*0.7" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
       <circle #circle [style.stroke]="spinnerColor" class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
     </svg>
   </div>
-  <ng-content></ng-content>
+  <div #contentContainer class="content-container">
+    <ng-content></ng-content>
+  </div>
 </div>
