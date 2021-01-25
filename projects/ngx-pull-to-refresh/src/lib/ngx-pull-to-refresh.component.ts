@@ -109,11 +109,6 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   lastScreenY: number = 0;
   sum: number = 0;
   onTouchMove($event: TouchEvent): void {
-    if($event.cancelable) {
-      $event.stopPropagation();
-      $event.preventDefault();
-    }
-
     if (!this._isEnable) {
       return;
     }
@@ -156,6 +151,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     }
 
     this.scrollPullPercent = (this.sum / this.distanceForRefresh) * 100;
+    this.isRefresh = this.scrollPullPercent >= 100 && this.isScrollTop;
+
     if(this.scrollPullPercent < 0) {
       this.scrollPullPercent = 0;
     }
@@ -202,11 +199,6 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   onMouseup($event: Event): void {
-    if($event.cancelable) {
-      $event.stopPropagation();
-      $event.preventDefault();
-    }
-
     if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
       this.refreshFunction();
     } else {
@@ -229,6 +221,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   restoreLoadingbar(): void {
     this.scrollPullPercent = 0;
     this.drawCircle(0);
+    this.loadingbar.nativeElement.style.transform = `translateY(0)`;
     this.hiddenLoadingbar();
   }
 
@@ -261,6 +254,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private addEventListener() {
     this.ele?.addEventListener('touchstart', this.touchstartEvent, false);
     this.ele?.addEventListener('touchmove', this.touchmoveEvent, false);
+    this.ele?.addEventListener('touchend', this.touchendEvent, false);
 
     let scrollTarget: any;
     if (this.ele?.tagName == 'HTML') {
@@ -270,7 +264,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     }
 
     scrollTarget?.addEventListener('scroll', this.scrollEvent, false);
-    this.ele?.addEventListener('touchend', this.touchendEvent, false);
+
 
     NgxPullToRefreshComponent.touchstartEventList.push(this.touchstartEvent);
     NgxPullToRefreshComponent.touchmoveEventList.push(this.touchmoveEvent);
