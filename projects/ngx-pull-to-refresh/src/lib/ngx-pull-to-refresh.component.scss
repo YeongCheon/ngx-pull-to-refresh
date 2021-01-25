@@ -7,11 +7,11 @@
 	height:100%;
 }
 
-$transition-duration: 0.2s;
+$transition-duration: 0.15s;
 
 .loadingbar-container {
-  transition: all $transition-duration;
-  transition-timing-function: linear;
+  transition: all $transition-duration ease-out;
+  // transition-timing-function: linear;
   visibility: hidden;
   display: flex;
 	z-index:9999;
