@@ -1,16 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
+$class-prefix: "ngx-ptr";
 $transition-duration: 0.2s;
 
 // source: https://codepen.io/mrrocks/pen/EiplA
 
-.str-container {
+.#{$class-prefix}-str-container {
 	display:block;
   width: 100%;
 	height:100%;
   position: relative;
 }
 
-.content-container {
+.#{$class-prefix}-content-container {
   width: 100%;
   display: block;
   position: relative;
@@ -18,7 +19,7 @@ $transition-duration: 0.2s;
   transition: transform $transition-duration ease-out;
 }
 
-.loadingbar-container {
+.#{$class-prefix}-loadingbar-container {
   transition: transform $transition-duration ease-out;
   // transition-timing-function: linear;
   top: 0;
@@ -45,9 +46,9 @@ body {
 $offset: 187;
 $duration: 1.4s;
 
-.spinner {
+.#{$class-prefix}-spinner {
   transform: rotate(-90deg);
-  .path {
+  .#{$class-prefix}-path {
     transition: all $transition-duration ease-out;
     // transition-timing-function: linear;
     stroke-dasharray: $offset;
@@ -57,27 +58,27 @@ $duration: 1.4s;
   }
 }
 
-.animation {
-  &.spinner {
+.#{$class-prefix}-animation {
+  &.#{$class-prefix}-spinner {
     animation: rotator $duration linear infinite;
   }
 
-  .path {
+  .#{$class-prefix}-path {
     stroke-dasharray: $offset;
     stroke-dashoffset: 0;
     transform-origin: center;
     animation:
-      dash $duration ease-in-out infinite,
-      colors ($duration*4) ease-in-out infinite;
+    #{$class-prefix}-dash $duration ease-in-out infinite,
+    #{$class-prefix}-colors ($duration*4) ease-in-out infinite;
   }
 }
 
-@keyframes rotator {
+@keyframes #{$class-prefix}-rotator {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(270deg); }
 }
 
-@keyframes colors {
+@keyframes #{$class-prefix}-colors {
 	0% { stroke: #4285F4; }
 	25% { stroke: #DE3E35; }
 	50% { stroke: #F7C223; }
@@ -85,7 +86,7 @@ $duration: 1.4s;
   100% { stroke: #4285F4; }
 }
 
-@keyframes dash {
+@keyframes #{$class-prefix}-dash {
  0% { stroke-dashoffset: $offset; }
  50% {
    stroke-dashoffset: $offset/4;
