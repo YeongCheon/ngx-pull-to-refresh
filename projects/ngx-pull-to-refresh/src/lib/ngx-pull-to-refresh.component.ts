@@ -1,9 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ngx-pull-to-refresh',
   templateUrl: './ngx-pull-to-refresh.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
@@ -66,6 +67,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   @Output() loadMore: EventEmitter<any> = new EventEmitter<any>();
 
   private ele: Element;
+  private isContainWrapper: boolean = false;
 
   touchstartEvent = (evt: any)=>{
     this.onTouchStart(evt);
@@ -86,7 +88,9 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private distance: number = 0;
   private startScreenY = 0;
 
-  constructor() {}
+  constructor(
+    private readonly chagneDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.refreshCompleteSubject.subscribe(() => {
@@ -113,6 +117,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     if(this.isPlayingAnimation) {
       return;
     } else if (!this._isEnable) {
+      return;
+    } else if(!this.isContainWrapper) {
       return;
     }
 
@@ -175,18 +181,22 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   onTouchStart($event: any): void {
+    this.chagneDetectorRef.detectChanges();
     if(this.isPlayingAnimation) {
       return;
     }
-    let isContainWrapper = false;
     const path = this.getParentElementList($event.srcElement);
-    path?.forEach((item: any) => {
-      if (item === this.wrapperElement.nativeElement) {
-        isContainWrapper = true;
-      }
-    });
 
-    if (!isContainWrapper) {
+    this.isContainWrapper = false;
+    for(let i = 0; i < path.length; i++) {
+      const item: HTMLElement = path[i];
+      if (item === this.wrapperElement.nativeElement) {
+        this.isContainWrapper = true;
+        break;
+      }
+    }
+
+    if (!this.isContainWrapper) {
       return;
     } else if (!this._isEnable) {
       return;
@@ -201,6 +211,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
   onTouchEnd($event: Event): void {
     if(this.isPlayingAnimation) {
+      return;
+    } else if(!this.isContainWrapper) {
       return;
     }
 
@@ -244,8 +256,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     this.circleSvgElement.nativeElement.style.strokeDashoffset = offset+"px";
   }
 
-  private getParentElementList(srcElement: any): any[] {
-    const parents = [];
+  private getParentElementList(srcElement: any): HTMLElement[] {
+    const parents: HTMLElement[] = [];
     let elem = srcElement;
 
     while (elem?.parentElement && elem.parentNode.nodeName.toLowerCase() != 'body') {
