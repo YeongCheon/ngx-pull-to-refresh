@@ -14,7 +14,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm install
       - run: ./node_modules/@angular/cli/bin/ng build --prod ngx-pull-to-refresh
-      - run: cd dist/ngx-pull-to-refresh
-      - run: npm publish
+      - run: npm publish dist/ngx-pull-to-refresh
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
