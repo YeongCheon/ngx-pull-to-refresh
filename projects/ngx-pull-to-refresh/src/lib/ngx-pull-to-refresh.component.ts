@@ -66,6 +66,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   @Output() loadMore: EventEmitter<any> = new EventEmitter<any>();
 
   private ele: Element;
+  private isContainWrapper: boolean = false;
 
   touchstartEvent = (evt: any)=>{
     this.onTouchStart(evt);
@@ -113,6 +114,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     if(this.isPlayingAnimation) {
       return;
     } else if (!this._isEnable) {
+      return;
+    } else if(!this.isContainWrapper) {
       return;
     }
 
@@ -178,15 +181,18 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     if(this.isPlayingAnimation) {
       return;
     }
-    let isContainWrapper = false;
     const path = this.getParentElementList($event.srcElement);
-    path?.forEach((item: any) => {
-      if (item === this.wrapperElement.nativeElement) {
-        isContainWrapper = true;
-      }
-    });
 
-    if (!isContainWrapper) {
+    this.isContainWrapper = false;
+    for(let i = 0; i < path.length; i++) {
+      const item: HTMLElement = path[i];
+      if (item === this.wrapperElement.nativeElement) {
+        this.isContainWrapper = true;
+        break;
+      }
+    }
+
+    if (!this.isContainWrapper) {
       return;
     } else if (!this._isEnable) {
       return;
@@ -201,6 +207,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
   onTouchEnd($event: Event): void {
     if(this.isPlayingAnimation) {
+      return;
+    } else if(!this.isContainWrapper) {
       return;
     }
 
@@ -244,8 +252,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     this.circleSvgElement.nativeElement.style.strokeDashoffset = offset+"px";
   }
 
-  private getParentElementList(srcElement: any): any[] {
-    const parents = [];
+  private getParentElementList(srcElement: any): HTMLElement[] {
+    const parents: HTMLElement[] = [];
     let elem = srcElement;
 
     while (elem?.parentElement && elem.parentNode.nodeName.toLowerCase() != 'body') {
