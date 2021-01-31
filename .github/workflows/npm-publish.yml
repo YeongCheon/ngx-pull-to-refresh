@@ -1,0 +1,20 @@
+name: npm-publish
+on:
+  create:
+    tags:
+      - v*
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: ./node_modules/@angular/cli/bin/ng build --prod ngx-pull-to-refresh
+      - run: cd dist/ngx-pull-to-refresh
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
