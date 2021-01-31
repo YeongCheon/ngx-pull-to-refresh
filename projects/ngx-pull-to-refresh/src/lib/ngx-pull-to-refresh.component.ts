@@ -1,9 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ngx-pull-to-refresh',
   templateUrl: './ngx-pull-to-refresh.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
@@ -87,7 +88,9 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private distance: number = 0;
   private startScreenY = 0;
 
-  constructor() {}
+  constructor(
+    private readonly chagneDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.refreshCompleteSubject.subscribe(() => {
@@ -178,6 +181,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   onTouchStart($event: any): void {
+    this.chagneDetectorRef.detectChanges();
     if(this.isPlayingAnimation) {
       return;
     }
