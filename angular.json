@@ -168,5 +168,12 @@
   "defaultProject": "ngx-pull-to-refresh",
   "cli": {
     "analytics": false
+  },
+  "schematics": {
+    "@schematics/angular": {
+      "component": {
+        "changeDetection": "OnPush"
+      }
+    }
   }
 }
