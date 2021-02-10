@@ -25,6 +25,6 @@ export class BComponent implements OnInit {
     setTimeout(() => {
       alert(message);
       event.next();
-    }, 3000);
+    }, 60000);
   }
 }

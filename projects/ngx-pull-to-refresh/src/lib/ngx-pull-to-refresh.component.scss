@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
 $class-prefix: "ngx-ptr";
-$transition-duration: 300ms;
+$transition-duration: 200ms;
 
 // source: https://codepen.io/mrrocks/pen/EiplA
 
@@ -66,7 +66,7 @@ $duration: 1.4s;
 
 .#{$class-prefix}-animation {
   &.#{$class-prefix}-spinner {
-    animation: rotator $duration linear infinite;
+    animation: #{$class-prefix}-rotator $duration linear infinite;
   }
 
   .#{$class-prefix}-path {
