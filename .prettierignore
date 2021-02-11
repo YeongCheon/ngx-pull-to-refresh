@@ -1,0 +1,7 @@
+**/dist
+**/lib
+**/.vscode
+**/.git
+**/.firebase
+**/projects
+**/node_modules
