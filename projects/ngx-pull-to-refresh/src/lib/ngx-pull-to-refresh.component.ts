@@ -2,312 +2,328 @@ import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, 
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'ngx-pull-to-refresh',
-  templateUrl: './ngx-pull-to-refresh.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./ngx-pull-to-refresh.component.scss']
+	selector: 'ngx-pull-to-refresh',
+	templateUrl: './ngx-pull-to-refresh.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
-  static touchstartEventList = [];
-  static touchmoveEventList = [];
-  static scrollEventList = [];
-  static touchendEventList = [];
+	static touchstartEventList = [];
+	static touchmoveEventList = [];
+	static scrollEventList = [];
+	static touchendEventList = [];
 
   @Input()
   spinnerColor = '#F7C223';
-
-  _targetElement: Element;
+  
   @Input()
-  set targetElement(value: Element) {
-    this.removeEventListener();
+  isHorizontal = false;
 
-    this._targetElement = value;
-    this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
+	_targetElement: Element;
+	@Input()
+	set targetElement(value: Element) {
+		this.removeEventListener();
 
-    if (this._isEnable) {
-      this.addEventListener();
-    } else {
-      this.removeEventListener();
-    }
-  }
-  _isEnable = true;
+		this._targetElement = value;
+		this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
 
-  @Input()
-  set isEnable(value: boolean) {
-    this._isEnable = value;
+		if (this._isEnable) {
+			this.addEventListener();
+		} else {
+			this.removeEventListener();
+		}
+	}
+	_isEnable = true;
 
-    if (this._isEnable) {
-      this.addEventListener();
-    } else {
-      this.removeEventListener();
-    }
-  }
+	@Input()
+	set isEnable(value: boolean) {
+		this._isEnable = value;
 
-  private isRefresh = false;
-  private isScrollTop = false;
-  private isOnScrollBottom = false;
-  @ViewChild('wrapper', { static: true })
-  private wrapperElement: ElementRef;
-  @ViewChild('contentContainer')
-  private contentContainer: ElementRef<HTMLDivElement>;
-  @ViewChild('loadingContainer')
-  private loadingbar: ElementRef<HTMLDivElement>;
-  @ViewChild('circle')
-  private circleSvgElement: ElementRef<SVGCircleElement>;
+		if (this._isEnable) {
+			this.addEventListener();
+		} else {
+			this.removeEventListener();
+		}
+	}
 
-  private readonly CIRCLE_OFFSET = 187;
-  @Input()
-  distanceForRefresh: number = 40;
+	private isRefresh = false;
+	private isScrollTop = false;
+	private isOnScrollBottom = false;
+	@ViewChild('wrapper', { static: true })
+	private wrapperElement: ElementRef;
+	@ViewChild('contentContainer')
+	private contentContainer: ElementRef<HTMLDivElement>;
+	@ViewChild('loadingContainer')
+	private loadingbar: ElementRef<HTMLDivElement>;
+	@ViewChild('circle')
+	private circleSvgElement: ElementRef<SVGCircleElement>;
 
-  scrollPullPercent = 20;
-  isPlayingAnimation = false;
+	private readonly CIRCLE_OFFSET = 187;
+	@Input()
+	distanceForRefresh: number = 40;
 
-  @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
-  refreshCompleteSubject = new Subject();
-  @Output() loadMore: EventEmitter<any> = new EventEmitter<any>();
+	scrollPullPercent = 20;
+	isPlayingAnimation = false;
 
-  private ele: Element;
-  private isContainWrapper: boolean = false;
+	@Output() refresh: EventEmitter<any> = new EventEmitter<any>();
+	refreshCompleteSubject = new Subject();
+	@Output() loadMore: EventEmitter<any> = new EventEmitter<any>();
 
-  touchstartEvent = (evt: any)=>{
-    this.onTouchStart(evt);
-  }
+	private ele: Element;
+	private isContainWrapper: boolean = false;
 
-  touchmoveEvent = (evt: TouchEvent)=>{
-    this.onTouchMove(evt);
+	touchstartEvent = (evt: any) => {
+		this.onTouchStart(evt);
+	}
+
+	touchmoveEvent = (evt: TouchEvent) => {
+		this.onTouchMove(evt);
+	};
+
+  scrollEvent = (evt: any) => {
+	this.onScroll(evt);
   };
 
-  scrollEvent = (evt: any)=>{
-    this.onScroll(evt);
-  };
+	touchendEvent = (evt: any) => {
+		this.onTouchEnd(evt);
+	}
 
-  touchendEvent = (evt: any)=>{
-    this.onTouchEnd(evt);
-  }
+	private distance: number = 0;
+	private startScreenY = 0;
 
-  private distance: number = 0;
-  private startScreenY = 0;
+	constructor(
+		private readonly chagneDetectorRef: ChangeDetectorRef
+	) { }
 
-  constructor(
-    private readonly chagneDetectorRef: ChangeDetectorRef
-  ) {}
+	ngOnInit() {
+		this.refreshCompleteSubject.subscribe(() => {
+			this.isPlayingAnimation = false;
+			this.restoreWrapper();
+			this.restoreLoadingbar();
+		});
 
-  ngOnInit() {
-    this.refreshCompleteSubject.subscribe(() => {
-      this.isPlayingAnimation = false;
-      this.restoreWrapper();
-      this.restoreLoadingbar();
-    });
+		this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
+		if (this._isEnable) {
+			this.addEventListener();
+		} else {
+			this.removeEventListener();
+		}
 
-    this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
-    if (this._isEnable) {
-      this.addEventListener();
-    } else {
-      this.removeEventListener();
-    }
+		this.distanceForRefresh = +this.distanceForRefresh;
+	}
 
-    this.distanceForRefresh = +this.distanceForRefresh;
-  }
+	ngOnDestroy() {
+		this.removeEventListener();
+	}
 
-  ngOnDestroy() {
-    this.removeEventListener();
-  }
+	onTouchMove($event: TouchEvent): void {
+		if (this.isPlayingAnimation) {
+			return;
+		} else if (!this._isEnable) {
+			return;
+		} else if (!this.isContainWrapper) {
+			return;
+		} else if(this.isHorizontal){
+		  return;
+		}
 
-  onTouchMove($event: TouchEvent): void {
-    if(this.isPlayingAnimation) {
-      return;
-    } else if (!this._isEnable) {
-      return;
-    } else if(!this.isContainWrapper) {
-      return;
-    }
+		const currentScreenY = $event.touches[0].screenY;
 
-    const currentScreenY = $event.touches[0].screenY;
+		if (scrollY <= 0 && this.distance > 0) {
+			this.isScrollTop = true;
+		} else {
+			this.isScrollTop = false;
+		}
 
-    if (scrollY <= 0 && this.distance > 0) {
-      this.isScrollTop = true;
-    } else {
-      this.isScrollTop = false;
-    }
+		const loadingbar = this.loadingbar.nativeElement;
 
-    const loadingbar = this.loadingbar.nativeElement;
+		if (this.startScreenY > currentScreenY) {
+			this.distance = 0;
+		} else {
+			this.distance = Math.abs(currentScreenY - this.startScreenY);
+		}
 
-    if(this.startScreenY > currentScreenY) {
-      this.distance = 0;
-    } else {
-      this.distance = Math.abs(currentScreenY - this.startScreenY);
-    }
+		if (this.distance > this.distanceForRefresh) {
+			this.distance = this.distanceForRefresh;
+		}
+		this.isRefresh = this.isScrollTop && this.distance >= this.distanceForRefresh;
 
-    if(this.distance > this.distanceForRefresh) {
-      this.distance = this.distanceForRefresh;
-    }
-    this.isRefresh = this.isScrollTop && this.distance >= this.distanceForRefresh;
+		const contentContainerElement = this.contentContainer.nativeElement;
 
-    const contentContainerElement = this.contentContainer.nativeElement;
+		if (this.isScrollTop && this.distance >= 0) {
+			contentContainerElement.style.transform = `translateY(${this.distance}px)`;
 
-    if (this.isScrollTop && this.distance >= 0) {
-      contentContainerElement.style.transform = `translateY(${this.distance}px)`;
+			loadingbar.style.visibility = "visible";
+		} else {
+			this.restoreWrapper();
+			loadingbar.style.visibility = "hidden";
+		}
 
-      loadingbar.style.visibility = "visible";
-    } else {
-      this.restoreWrapper();
-      loadingbar.style.visibility = "hidden";
-    }
+		this.scrollPullPercent = (this.distance / this.distanceForRefresh) * 100;
+		this.isRefresh = this.scrollPullPercent >= 100 && this.isScrollTop;
 
-    this.scrollPullPercent = (this.distance / this.distanceForRefresh) * 100;
-    this.isRefresh = this.scrollPullPercent >= 100 && this.isScrollTop;
+		if (this.scrollPullPercent < 0) {
+			this.scrollPullPercent = 0;
+		}
 
-    if(this.scrollPullPercent < 0) {
-      this.scrollPullPercent = 0;
-    }
-
-    this.drawCircle(this.scrollPullPercent);
-  }
+		this.drawCircle(this.scrollPullPercent);
+	}
 
   onScroll($event: any): void {
-    if (!this._isEnable) {
-      return;
-    }
+		if (!this._isEnable) {
+			return;
+		}
 
-    const scrollY = this.ele.scrollTop;
-    this.isOnScrollBottom = scrollY >= 0 &&
-      this.ele.clientHeight + this.ele.scrollTop >= this.ele.scrollHeight * 0.85;
+		if (this.isHorizontal) {
+			const scrollX = this.ele.scrollLeft;
+			this.isOnScrollBottom = scrollX >= 0 &&
+				this.ele.clientWidth + this.ele.scrollLeft >= this.ele.scrollWidth * 0.85;
 
-    if (this.isOnScrollBottom &&
-      this.loadMoreFunction &&
-      document.contains(this.wrapperElement.nativeElement)) {
-      this.loadMoreFunction();
-    }
-  }
+		} else {
+			const scrollY = this.ele.scrollTop;
+			this.isOnScrollBottom = scrollY >= 0 &&
+				this.ele.clientHeight + this.ele.scrollTop >= this.ele.scrollHeight * 0.85;
+		}
 
-  onTouchStart($event: any): void {
-    this.chagneDetectorRef.detectChanges();
-    if(this.isPlayingAnimation) {
-      return;
-    }
-    const path = this.getParentElementList($event.srcElement);
+		if (this.isOnScrollBottom &&
+			this.loadMoreFunction &&
+		  document.contains(this.wrapperElement.nativeElement)) {
+			this.loadMoreFunction();
+		}
+	}
 
-    this.isContainWrapper = false;
-    for(let i = 0; i < path.length; i++) {
-      const item: HTMLElement = path[i];
-      if (item === this.wrapperElement.nativeElement) {
-        this.isContainWrapper = true;
-        break;
-      }
-    }
+	onTouchStart($event: any): void {
+		this.chagneDetectorRef.detectChanges();
+		if (this.isPlayingAnimation) {
+			return;
+		} else if(this.isHorizontal) {
+		  return;
+		}
+		const path = this.getParentElementList($event.srcElement);
 
-    if (!this.isContainWrapper) {
-      return;
-    } else if (!this._isEnable) {
-      return;
-    }
+		this.isContainWrapper = false;
+		for (let i = 0; i < path.length; i++) {
+			const item: HTMLElement = path[i];
+			if (item === this.wrapperElement.nativeElement) {
+				this.isContainWrapper = true;
+				break;
+			}
+		}
 
-    this.restoreWrapper();
-    this.restoreLoadingbar();
-    this.isRefresh = false;
-    this.startScreenY = $event.touches[0].screenY;
-    this.distance = 0;
-  }
+		if (!this.isContainWrapper) {
+			return;
+		} else if (!this._isEnable) {
+			return;
+		}
 
-  onTouchEnd($event: Event): void {
-    if(this.isPlayingAnimation) {
-      return;
-    } else if(!this.isContainWrapper) {
-      return;
-    }
+		this.restoreWrapper();
+		this.restoreLoadingbar();
+		this.isRefresh = false;
+		this.startScreenY = $event.touches[0].screenY;
+		this.distance = 0;
+	}
 
-    if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
-      this.refreshFunction();
-    } else {
-      this.restoreWrapper();
-      this.restoreLoadingbar();
-    }
-  }
+	onTouchEnd($event: Event): void {
+		if (this.isPlayingAnimation) {
+			return;
+		} else if (!this.isContainWrapper) {
+			return;
+		} else if(this.isHorizontal) {
+		  return;
+		}
 
-  restoreWrapper(): void {
-    this.contentContainer.nativeElement.style.position = "relative";
-    this.contentContainer.nativeElement.style.transform = `translateY(0)`;
-    // this.loadingbar.nativeElement.style.transform = `translateY(0px)`;
-    this.hiddenLoadingbar();
-  }
+		if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
+			this.refreshFunction();
+		} else {
+			this.restoreWrapper();
+			this.restoreLoadingbar();
+		}
+	}
 
-  private hiddenLoadingbar() {
-    this.loadingbar.nativeElement.style.visibility = "hidden";
-  }
+	restoreWrapper(): void {
+		this.contentContainer.nativeElement.style.position = "relative";
+		this.contentContainer.nativeElement.style.transform = `translateY(0)`;
+		// this.loadingbar.nativeElement.style.transform = `translateY(0px)`;
+		this.hiddenLoadingbar();
+	}
 
-  restoreLoadingbar(): void {
-    this.scrollPullPercent = 0;
-    this.drawCircle(0);
-    this.loadingbar.nativeElement.style.transform = `translateY(0)`;
-    this.hiddenLoadingbar();
-  }
+	private hiddenLoadingbar() {
+		this.loadingbar.nativeElement.style.visibility = "hidden";
+	}
 
-  refreshFunction(): void {
-    this.isPlayingAnimation = true;
-    this.refresh.emit(this.refreshCompleteSubject);
-  }
+	restoreLoadingbar(): void {
+		this.scrollPullPercent = 0;
+		this.drawCircle(0);
+		this.loadingbar.nativeElement.style.transform = `translateY(0)`;
+		this.hiddenLoadingbar();
+	}
 
-  loadMoreFunction(): void {
-    this.loadMore.emit(true);
-  }
+	refreshFunction(): void {
+		this.isPlayingAnimation = true;
+		this.refresh.emit(this.refreshCompleteSubject);
+	}
 
-  private drawCircle(percentage: number) {
-    const offset = this.CIRCLE_OFFSET - (this.CIRCLE_OFFSET * (Math.abs(percentage) / 100));
-    this.circleSvgElement.nativeElement.style.strokeDashoffset = offset+"px";
-  }
+	loadMoreFunction(): void {
+		this.loadMore.emit(true);
+	}
 
-  private getParentElementList(srcElement: any): HTMLElement[] {
-    const parents: HTMLElement[] = [];
-    let elem = srcElement;
+	private drawCircle(percentage: number) {
+		const offset = this.CIRCLE_OFFSET - (this.CIRCLE_OFFSET * (Math.abs(percentage) / 100));
+		this.circleSvgElement.nativeElement.style.strokeDashoffset = offset + "px";
+	}
 
-    while (elem?.parentElement && elem.parentNode.nodeName.toLowerCase() != 'body') {
-      elem = elem.parentElement;
-      parents.push(elem);
-    }
+	private getParentElementList(srcElement: any): HTMLElement[] {
+		const parents: HTMLElement[] = [];
+		let elem = srcElement;
 
-    return parents;
-  }
+		while (elem?.parentElement && elem.parentNode.nodeName.toLowerCase() != 'body') {
+			elem = elem.parentElement;
+			parents.push(elem);
+		}
 
-  private addEventListener() {
-    this.ele?.addEventListener('touchstart', this.touchstartEvent, false);
-    this.ele?.addEventListener('touchmove', this.touchmoveEvent, false);
-    this.ele?.addEventListener('touchend', this.touchendEvent, false);
+		return parents;
+	}
 
-    let scrollTarget: any;
-    if (this.ele?.tagName == 'HTML') {
-      scrollTarget = window;
-    } else {
-      scrollTarget = this.ele;
-    }
+	private addEventListener(): void {
+		this.ele?.addEventListener('touchstart', this.touchstartEvent, false);
+		this.ele?.addEventListener('touchmove', this.touchmoveEvent, false);
+		this.ele?.addEventListener('touchend', this.touchendEvent, false);
 
-    scrollTarget?.addEventListener('scroll', this.scrollEvent, false);
+		let scrollTarget: Element | Window;
+		if (this.ele?.tagName == 'HTML') {
+			scrollTarget = window;
+		} else {
+			scrollTarget = this.ele;
+		}
+
+		scrollTarget?.addEventListener('scroll', this.scrollEvent, false);
 
 
-    NgxPullToRefreshComponent.touchstartEventList.push(this.touchstartEvent);
-    NgxPullToRefreshComponent.touchmoveEventList.push(this.touchmoveEvent);
-    NgxPullToRefreshComponent.scrollEventList.push(this.scrollEvent);
-    NgxPullToRefreshComponent.touchendEventList.push(this.touchendEvent);
-  }
+		NgxPullToRefreshComponent.touchstartEventList.push(this.touchstartEvent);
+		NgxPullToRefreshComponent.touchmoveEventList.push(this.touchmoveEvent);
+		NgxPullToRefreshComponent.scrollEventList.push(this.scrollEvent);
+		NgxPullToRefreshComponent.touchendEventList.push(this.touchendEvent);
+	}
 
-  private removeEventListener() {
-    this.ele?.removeEventListener('touchstart', this.touchstartEvent);
-    this.ele?.removeEventListener('touchmove', this.touchmoveEvent);
-    this.ele?.removeEventListener('scroll', this.scrollEvent);
-    this.ele?.removeEventListener('touchend', this.touchendEvent);
-  }
+	private removeEventListener(): void {
+		this.ele?.removeEventListener('touchstart', this.touchstartEvent);
+		this.ele?.removeEventListener('touchmove', this.touchmoveEvent);
+		this.ele?.removeEventListener('scroll', this.scrollEvent);
+		this.ele?.removeEventListener('touchend', this.touchendEvent);
+	}
 
-  private clearAllEvent() {
-    NgxPullToRefreshComponent.touchstartEventList.forEach((evt) => {
-      this.ele?.removeEventListener('touchstart', evt);
-    });
-    NgxPullToRefreshComponent.touchmoveEventList.forEach((evt) => {
-      this.ele?.removeEventListener('touchmove', evt);
-    });
-    NgxPullToRefreshComponent.scrollEventList.forEach((evt) => {
-      this.ele?.removeEventListener('scroll', evt);
-    });
-    NgxPullToRefreshComponent.touchendEventList.forEach((evt) => {
-      this.ele?.removeEventListener('touchend', evt);
-    });
-  }
+	private clearAllEvent(): void {
+		NgxPullToRefreshComponent.touchstartEventList.forEach((evt) => {
+			this.ele?.removeEventListener('touchstart', evt);
+		});
+		NgxPullToRefreshComponent.touchmoveEventList.forEach((evt) => {
+			this.ele?.removeEventListener('touchmove', evt);
+		});
+		NgxPullToRefreshComponent.scrollEventList.forEach((evt) => {
+			this.ele?.removeEventListener('scroll', evt);
+		});
+		NgxPullToRefreshComponent.touchendEventList.forEach((evt) => {
+			this.ele?.removeEventListener('touchend', evt);
+		});
+	}
 }
