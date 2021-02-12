@@ -1,17 +1,21 @@
 {
   "root": true,
   "ignorePatterns": [
-     "*.spec.ts"
+    "*.spec.ts"
   ],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": [
+        "*.ts"
+      ],
       "parserOptions": {
         "ecmaVersion": 2020,
-        "project": ["tsconfig.json"],
+        "project": [
+          "tsconfig.json"
+        ],
         "createDefaultProgram": true
       },
-	  "extends": [
+      "extends": [
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
         "eslint:recommended",
@@ -22,7 +26,14 @@
         "plugin:prettier/recommended"
       ],
       "rules": {
-        "no-console": ["error", { "allow": ["error"] }],
+        "no-console": [
+          "error",
+          {
+            "allow": [
+              "error"
+            ]
+          }
+        ],
         "@angular-eslint/component-selector": [
           "error",
           {
@@ -39,16 +50,20 @@
             "style": "camelCase"
           }
         ],
-		  "variable-name": "off",
-		  "require-jsdoc": "off",
-		  "valid-jsdoc": "off",
-		  "new-cap": "off",
-		  "no-invalid-this": "off"
+        "variable-name": "off",
+        "require-jsdoc": "off",
+        "valid-jsdoc": "off",
+        "new-cap": "off",
+        "no-invalid-this": "off"
       }
     },
     {
-      "files": ["*.html"],
-      "plugins": ["html"],
+      "files": [
+        "*.html"
+      ],
+      "plugins": [
+        "html"
+      ],
       "extends": [
         "plugin:@angular-eslint/template/recommended",
         "prettier/@typescript-eslint",
