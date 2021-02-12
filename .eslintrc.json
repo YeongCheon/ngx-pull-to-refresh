@@ -1,6 +1,7 @@
 {
   "root": true,
   "ignorePatterns": [
+     "*.spec.ts"
   ],
   "overrides": [
     {
@@ -10,10 +11,11 @@
         "project": ["tsconfig.json"],
         "createDefaultProgram": true
       },
-      "extends": [
+	  "extends": [
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
         "eslint:recommended",
+        "google",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "prettier/@typescript-eslint",
@@ -25,7 +27,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "app",
+            "prefix": "ngx",
             "style": "kebab-case"
           }
         ],
@@ -33,58 +35,15 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "app",
+            "prefix": "ngx",
             "style": "camelCase"
           }
         ],
-        "@typescript-eslint/explicit-member-accessibility": [
-          "off",
-          {
-            "accessibility": "explicit"
-          }
-        ],
-        "@typescript-eslint/unbound-method": [
-          "error",
-          {
-            "ignoreStatic": true
-          }
-        ],
-        "@typescript-eslint/no-namespace": "off"
-
-        // "arrow-parens": ["off", "always"],
-        // "import/order": "off",
-        // "@typescript-eslint/no-var-requires": "off",
-        // "@typescript-eslint/restrict-plus-operands": "off",
-        // "@typescript-eslint/no-explicit-any": "off",
-        // "@typescript-eslint/explicit-module-boundary-types": "off",
-        // "@typescript-eslint/restrict-template-expressions": "off",
-        // "@typescript-eslint/no-unsafe-return": "off",
-        // "@typescript-eslint/no-unsafe-call": "off",
-        // "@typescript-eslint/no-unsafe-member-access": "off",
-        // "@typescript-eslint/prefer-regexp-exec": "off",
-        // "@typescript-eslint/no-unsafe-assignment": "off",
-        // "@typescript-eslint/no-empty-function": "off",
-        // "@typescript-eslint/no-misused-promises": "off",
-        // "@typescript-eslint/no-unnecessary-type-assertion": "off",
-        // "@typescript-eslint/no-floating-promises": "off",
-        // "@typescript-eslint/no-unused-vars": "off"
-        // "@typescript-eslint/require-await": "off",
-        // "@typescript-eslint/ban-types": "off",
-        // "@typescript-eslint/ban-ts-comment": "off",
-        // "@typescript-eslint/no-array-constructor": "off",
-        // "@typescript-eslint/await-thenable": "off",
-        // "@angular-eslint/contextual-lifecycle": "off"
-        // "@angular-eslint/no-input-rename": "off"
-        // "@angular-eslint/no-empty-lifecycle-method": "off"
-        // "no-prototype-builtins": "off"
-        // "no-useless-escape": "off"
-        // "no-async-promise-executor": "off"
-        // "no-empty": "off",
-        // "no-case-declarations": "off"
-        // "no-var": "off",
-        // "prefer-const": "off"
-        // "no-self-assign": "off"
-        // "no-useless-catch": "off"
+		  "variable-name": "off",
+		  "require-jsdoc": "off",
+		  "valid-jsdoc": "off",
+		  "new-cap": "off",
+		  "no-invalid-this": "off"
       }
     },
     {
