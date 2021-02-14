@@ -11,18 +11,20 @@ export class AppComponent implements OnInit {
   title = 'example';
   targetElement: Element;
 
-  ngOnInit() {
+  items = new Array(100);
+
+  ngOnInit(): void {
     this.targetElement = document.querySelector('html');
   }
 
-  myRefreshEvent(event: Subject<any>, message: string) {
+  myRefreshEvent(event: Subject<any>, message: string): void {
     setTimeout(() => {
       alert(message);
       event.next();
     }, 3000);
   }
 
-  alert(message: string) {
+  alert(message: string): void {
     alert(message);
   }
 }
