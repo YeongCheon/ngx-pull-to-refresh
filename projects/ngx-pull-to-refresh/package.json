@@ -1,6 +1,6 @@
 {
   "name": "ngx-pull-to-refresh",
-  "version": "11.1.10",
+  "version": "11.1.11",
   "peerDependencies": {
     "@angular/common": "^11.1.1",
     "@angular/core": "^11.1.1"
