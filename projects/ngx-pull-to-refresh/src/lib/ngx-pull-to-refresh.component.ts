@@ -24,6 +24,9 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   @Input()
   isHorizontal = false;
 
+  @Input()
+  customClass = "";
+
   private _targetElement: Element;
   @Input()
   set targetElement(value: Element) {

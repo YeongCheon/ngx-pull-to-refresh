@@ -7,7 +7,7 @@
       <circle #circle [style.stroke]="spinnerColor" class="ngx-ptr-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
     </svg>
   </div>
-  <div #contentContainer class="ngx-ptir-content-container">
+  <div #contentContainer class="ngx-ptr-content-container" [ngClass]="customClass"> 
     <ng-content></ng-content>
   </div>
 </div>

@@ -83,6 +83,7 @@ export class AppComponent implements OnInit {
 | ~distanceForRefresh~ | number  | 40            | distance for refresh trigger event.                                                                              |
 | ~isEnable~           | boolean | true          |                                                                                                                  |
 | ~isHorizontal~       | boolean | false         |                                                                                                                  |
+| ~customClass~        | string  | ""            | css class name. it is binding to ~.ngx-ptr-content-container~ element.                                           |
 | ~targetElement~      | Object  | SELF          | Don't use it normally. if you have any problems with event occurrence, enter a ~window~ object in this property. |
 
 *** Output
