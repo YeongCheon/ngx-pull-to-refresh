@@ -15,6 +15,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
   private distance = 0;
   private startScreenY = 0;
+  private previousX = 0;
+  private previousY = 0;
 
   @Input()
   spinnerColor = '#F7C223';
@@ -174,16 +176,19 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const scrollX = this.ele.scrollLeft;
+    const scrollY = this.ele.scrollTop;
     if (this.isHorizontal) {
-      const scrollX = this.ele.scrollLeft;
       this.isOnScrollBottom = scrollX >= 0 &&
+        scrollX > this.previousX &&
         this.ele.clientWidth + this.ele.scrollLeft >= this.ele.scrollWidth * 0.85;
-
     } else {
-      const scrollY = this.ele.scrollTop;
       this.isOnScrollBottom = scrollY >= 0 &&
+        scrollY > this.previousY &&
         this.ele.clientHeight + this.ele.scrollTop >= this.ele.scrollHeight * 0.85;
     }
+    this.previousX = scrollX;
+    this.previousY = scrollY;
 
     if (this.isOnScrollBottom &&
       this.loadMoreFunction &&
