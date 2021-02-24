@@ -28,6 +28,7 @@ $transition-duration: 200ms;
 }
 
 .#{$class-prefix}-loadingbar-container {
+  margin-top: 6px;
   transition: transform $transition-duration ease-out;
   will-change: transform;
   transition: transform $transition-duration cubic-bezier(0,0,0.2,1);
