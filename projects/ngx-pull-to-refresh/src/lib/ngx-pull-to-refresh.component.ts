@@ -69,6 +69,8 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private readonly CIRCLE_OFFSET = 187;
   @Input()
   distanceForRefresh = 40;
+  @Input()
+  spinnerSize = 300;
 
   scrollPullPercent = 20;
   isPlayingAnimation = false;

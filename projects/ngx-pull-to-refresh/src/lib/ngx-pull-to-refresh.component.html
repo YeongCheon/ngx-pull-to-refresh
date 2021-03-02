@@ -3,7 +3,7 @@
 	class="ngx-ptr-str-container"
 	[class.horizontal]="isHorizontal">
   <div #loadingContainer class="ngx-ptr-loadingbar-container">
-    <svg #spinner [class.ngx-ptr-animation]="isPlayingAnimation" class="ngx-ptr-spinner" [attr.width]="distanceForRefresh*0.7" [attr.height]="distanceForRefresh*0.7" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+    <svg #spinner [class.ngx-ptr-animation]="isPlayingAnimation" class="ngx-ptr-spinner" [attr.width]="spinnerSize" [attr.height]="spinnerSize" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
       <circle #circle [style.stroke]="spinnerColor" class="ngx-ptr-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
     </svg>
   </div>
