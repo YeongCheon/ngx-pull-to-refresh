@@ -15,7 +15,7 @@ $transition-duration: 200ms;
   overscroll-behavior-y: contain;
 
   &.horizontal {
-    overflow-x: auto;
+    // overflow-x: auto;
   }
 }
 
