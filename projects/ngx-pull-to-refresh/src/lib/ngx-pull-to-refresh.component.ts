@@ -136,7 +136,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
     const currentScreenY = $event.touches[0].screenY;
 
-    if (scrollY <= 0 && this.distance > 0) {
+    if (this.ele.scrollTop <= 0 && this.distance > 0) {
       this.isScrollTop = true;
     } else {
       this.isScrollTop = false;
