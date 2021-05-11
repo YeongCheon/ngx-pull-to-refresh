@@ -12,10 +12,14 @@ $transition-duration: 200ms;
   min-height:100%;
   // overflow:hidden;
   position: relative;
+  overscroll-behavior-x: auto;
   overscroll-behavior-y: contain;
 
   &.horizontal {
     overflow-x: auto;
+	  overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
   }
 }
 
