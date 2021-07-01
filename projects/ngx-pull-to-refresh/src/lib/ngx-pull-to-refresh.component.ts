@@ -1,4 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -8,6 +9,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
+  private isServer: boolean;
+  
   static touchstartEventList = [];
   static touchmoveEventList = [];
   static scrollEventList = [];
@@ -30,28 +33,32 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private _targetElement: Element;
   @Input()
   set targetElement(value: Element) {
-    this.removeEventListener();
+	if(!this.isServer) {
+	  this.removeEventListener();
 
-    this._targetElement = value;
-    this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
+      this._targetElement = value;
+      this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
 
-    if (this._isEnable) {
-      this.addEventListener();
-    } else {
-      this.removeEventListener();
-    }
+      if (this._isEnable) {
+		this.addEventListener();
+      } else {
+		this.removeEventListener();
+      }
+	}
   }
   private _isEnable = true;
 
   @Input()
   set isEnable(value: boolean) {
-    this._isEnable = value;
+	if(!this.isServer) {
+      this._isEnable = value;
 
-    if (this._isEnable) {
-      this.addEventListener();
-    } else {
-      this.removeEventListener();
-    }
+      if (this._isEnable) {
+		this.addEventListener();
+      } else {
+		this.removeEventListener();
+      }
+	}
   }
 
   private isRefresh = false;
@@ -99,28 +106,34 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private readonly chagneDetectorRef: ChangeDetectorRef
-  ) { }
+    private readonly chagneDetectorRef: ChangeDetectorRef,
+	@Inject(PLATFORM_ID) private platformId: string
+  ) {
+	this.isServer = isPlatformServer(this.platformId);
+  }
 
   ngOnInit(): void {
-    this.refreshCompleteSubject.subscribe(() => {
-      this.isPlayingAnimation = false;
-      this.restoreWrapper();
-      this.restoreLoadingbar();
-    });
+	if(!this.isServer) {
+	  this.refreshCompleteSubject.subscribe(() => {
+		this.isPlayingAnimation = false;
+		this.restoreWrapper();
+		this.restoreLoadingbar();
+      });
 
-    this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
-    if (this._isEnable) {
-      this.addEventListener();
-    } else {
-      this.removeEventListener();
-    }
+      this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
+      if (this._isEnable) {
+		this.addEventListener();
+      } else {
+		this.removeEventListener();
+      }
 
-    this.distanceForRefresh = +this.distanceForRefresh;
+      this.distanceForRefresh = +this.distanceForRefresh;
+	}
   }
 
   ngOnDestroy(): void {
-    this.removeEventListener();
+	this.removeEventListener();
+	this.refreshCompleteSubject?.complete();
   }
 
   onTouchMove($event: TouchEvent): void {
