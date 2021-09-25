@@ -65,6 +65,7 @@ export class AppComponent implements OnInit {
    #+BEGIN_SRC html
 <ngx-pull-to-refresh
 	spinnerColor="#ff0000"
+  spinnerSize="50"
 	distanceForRefresh="40"
 	[isEnable]="true"
 	[targetElement]="targetElement"
@@ -80,6 +81,7 @@ export class AppComponent implements OnInit {
 | Attribute            | Type    | Default value | Description                                                                                                      |
 |----------------------+---------+---------------+------------------------------------------------------------------------------------------------------------------|
 | ~spinnerColor~       | string  | #F7C223       | refresh spinner color.                                                                                           |
+| ~spinnerSize~        | number  | 300           | refresh spinner size.                                                                                            |
 | ~distanceForRefresh~ | number  | 40            | distance for refresh trigger event.                                                                              |
 | ~isEnable~           | boolean | true          |                                                                                                                  |
 | ~isHorizontal~       | boolean | false         |                                                                                                                  |
