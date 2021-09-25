@@ -9,12 +9,12 @@ import { Subject } from 'rxjs';
   styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
-  private isServer: boolean;
-  
   static touchstartEventList = [];
   static touchmoveEventList = [];
   static scrollEventList = [];
   static touchendEventList = [];
+
+  private isServer: boolean;
 
   private distance = 0;
   private startScreenY = 0;
@@ -33,32 +33,32 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private _targetElement: Element;
   @Input()
   set targetElement(value: Element) {
-	if(!this.isServer) {
-	  this.removeEventListener();
+    if (!this.isServer) {
+      this.removeEventListener();
 
       this._targetElement = value;
       this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
 
       if (this._isEnable) {
-		this.addEventListener();
+        this.addEventListener();
       } else {
-		this.removeEventListener();
+        this.removeEventListener();
       }
-	}
+    }
   }
   private _isEnable = true;
 
   @Input()
   set isEnable(value: boolean) {
-	if(!this.isServer) {
+    if (!this.isServer) {
       this._isEnable = value;
 
       if (this._isEnable) {
-		this.addEventListener();
+        this.addEventListener();
       } else {
-		this.removeEventListener();
+        this.removeEventListener();
       }
-	}
+    }
   }
 
   private isRefresh = false;
@@ -66,7 +66,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private isOnScrollBottom = false;
   @ViewChild('wrapper', { static: true })
   private wrapperElement: ElementRef<HTMLElement>;
-  @ViewChild('contentContainer')
+  @ViewChild('contentContainer', { static: true })
   private contentContainer: ElementRef<HTMLDivElement>;
   @ViewChild('loadingContainer')
   private loadingbar: ElementRef<HTMLDivElement>;
@@ -107,33 +107,33 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly chagneDetectorRef: ChangeDetectorRef,
-	@Inject(PLATFORM_ID) private platformId: string
+    @Inject(PLATFORM_ID) private platformId: string
   ) {
-	this.isServer = isPlatformServer(this.platformId);
+    this.isServer = isPlatformServer(this.platformId);
   }
 
   ngOnInit(): void {
-	if(!this.isServer) {
-	  this.refreshCompleteSubject.subscribe(() => {
-		this.isPlayingAnimation = false;
-		this.restoreWrapper();
-		this.restoreLoadingbar();
+    if (!this.isServer) {
+      this.refreshCompleteSubject.subscribe(() => {
+        this.isPlayingAnimation = false;
+        this.restoreWrapper();
+        this.restoreLoadingbar();
       });
 
-      this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
+      this.ele = this._targetElement ?? this.contentContainer.nativeElement;
       if (this._isEnable) {
-		this.addEventListener();
+        this.addEventListener();
       } else {
-		this.removeEventListener();
+        this.removeEventListener();
       }
 
       this.distanceForRefresh = +this.distanceForRefresh;
-	}
+    }
   }
 
   ngOnDestroy(): void {
-	this.removeEventListener();
-	this.refreshCompleteSubject?.complete();
+    this.removeEventListener();
+    this.refreshCompleteSubject?.complete();
   }
 
   onTouchMove($event: TouchEvent): void {
