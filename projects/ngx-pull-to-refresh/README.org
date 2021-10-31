@@ -15,7 +15,7 @@ ngx-pull-to-refresh is angular component look like [[https://developer.android.c
 
 2. import module
    #+BEGIN_SRC typescript
-import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh.module';
+import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh';
 
 @NgModule({
   declarations: [
