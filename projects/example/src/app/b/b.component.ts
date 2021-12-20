@@ -9,9 +9,7 @@ import { Subject } from 'rxjs';
 export class BComponent implements OnInit {
   isEnable = true;
   title = 'B';
-  targetElement: Element;
-
-  constructor() { }
+  targetElement?: Element | null;
 
   ngOnInit(): void {
     this.targetElement = document.querySelector('html');

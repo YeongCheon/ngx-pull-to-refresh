@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 export class AppComponent implements OnInit {
   isEnable = true;
   title = 'example';
-  targetElement: Element;
+  targetElement?: Element | null;
 
   items = new Array(100);
 

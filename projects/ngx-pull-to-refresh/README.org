@@ -85,7 +85,6 @@ export class AppComponent implements OnInit {
 | ~distanceForRefresh~ | number  | 40            | distance for refresh trigger event.                                                                              |
 | ~isEnable~           | boolean | true          |                                                                                                                  |
 | ~targetElement~      | Object  | SELF          | Don't use it normally. if you have any problems with event occurrence, enter a ~window~ object in this property. |
-| ~spinnerSize~        | string  | 300           | refresh spinner size.                                                                                            |
 
 
 *** Output

@@ -9,10 +9,10 @@ import { Subject } from 'rxjs';
   styleUrls: ['./ngx-pull-to-refresh.component.scss']
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
-  static touchstartEventList = [];
-  static touchmoveEventList = [];
-  static scrollEventList = [];
-  static touchendEventList = [];
+  static touchstartEventList: any[] = [];
+  static touchmoveEventList: any[] = [];
+  static scrollEventList: any[] = [];
+  static touchendEventList: any[] = [];
 
   private isServer: boolean;
 
@@ -30,9 +30,9 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   @Input()
   customClass = "";
 
-  private _targetElement: Element;
+  private _targetElement?: Element | null;
   @Input()
-  set targetElement(value: Element) {
+  set targetElement(value: Element | undefined | null) {
     if (!this.isServer) {
       this.removeEventListener();
 
@@ -65,13 +65,13 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private isScrollTop = false;
   private isOnScrollBottom = false;
   @ViewChild('wrapper', { static: true })
-  private wrapperElement: ElementRef<HTMLElement>;
+  private wrapperElement!: ElementRef<HTMLElement>;
   @ViewChild('contentContainer', { static: true })
-  private contentContainer: ElementRef<HTMLDivElement>;
+  private contentContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('loadingContainer')
-  private loadingbar: ElementRef<HTMLDivElement>;
+  private loadingbar!: ElementRef<HTMLDivElement>;
   @ViewChild('circle')
-  private circleSvgElement: ElementRef<SVGCircleElement>;
+  private circleSvgElement!: ElementRef<SVGCircleElement>;
 
   private readonly CIRCLE_OFFSET = 187;
   @Input()
@@ -86,7 +86,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   refreshCompleteSubject = new Subject();
   @Output() loadMore = new EventEmitter<any>();
 
-  private ele: Element;
+  private ele!: Element;
   private isContainWrapper = false;
 
   touchstartEvent = (evt: TouchEvent): void => {
@@ -298,7 +298,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     const parents: HTMLElement[] = [];
     let elem = srcElement;
 
-    while (elem?.parentElement && elem.parentNode.nodeName.toLowerCase() !== 'body') {
+    while (elem?.parentElement && elem?.parentNode?.nodeName?.toLowerCase() !== 'body') {
       elem = elem.parentElement;
       parents.push(elem);
     }
@@ -307,9 +307,21 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   private addEventListener(): void {
-    this.ele?.addEventListener('touchstart', this.touchstartEvent, false);
-    this.ele?.addEventListener('touchmove', this.touchmoveEvent, false);
-    this.ele?.addEventListener('touchend', this.touchendEvent, false);
+    this.ele?.addEventListener(
+      'touchstart' as (keyof ElementEventMap),
+      this.touchstartEvent as any,
+      false
+    );
+    this.ele?.addEventListener(
+      'touchmove' as (keyof ElementEventMap),
+      this.touchmoveEvent as any,
+      false
+    );
+    this.ele?.addEventListener(
+      'touchend' as (keyof ElementEventMap),
+      this.touchendEvent as any,
+      false
+    );
 
     let scrollTarget: Element | Window;
     if (this.ele?.tagName === 'HTML') {
@@ -321,17 +333,29 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     scrollTarget?.addEventListener('scroll', this.scrollEvent, false);
 
 
-    NgxPullToRefreshComponent.touchstartEventList.push(this.touchstartEvent);
-    NgxPullToRefreshComponent.touchmoveEventList.push(this.touchmoveEvent);
-    NgxPullToRefreshComponent.scrollEventList.push(this.scrollEvent);
-    NgxPullToRefreshComponent.touchendEventList.push(this.touchendEvent);
+    NgxPullToRefreshComponent.touchstartEventList.push(this.touchstartEvent as any);
+    NgxPullToRefreshComponent.touchmoveEventList.push(this.touchmoveEvent as any);
+    NgxPullToRefreshComponent.scrollEventList.push(this.scrollEvent as any);
+    NgxPullToRefreshComponent.touchendEventList.push(this.touchendEvent as any);
   }
 
   private removeEventListener(): void {
-    this.ele?.removeEventListener('touchstart', this.touchstartEvent);
-    this.ele?.removeEventListener('touchmove', this.touchmoveEvent);
-    this.ele?.removeEventListener('scroll', this.scrollEvent);
-    this.ele?.removeEventListener('touchend', this.touchendEvent);
+    this.ele?.removeEventListener(
+      'touchstart' as (keyof ElementEventMap),
+      this.touchstartEvent as any
+    );
+    this.ele?.removeEventListener(
+      'touchmove' as (keyof ElementEventMap),
+      this.touchmoveEvent as any
+    );
+    this.ele?.removeEventListener(
+      'scroll' as (keyof ElementEventMap),
+      this.scrollEvent as any
+    );
+    this.ele?.removeEventListener(
+      'touchend' as (keyof ElementEventMap),
+      this.touchendEvent as any
+    );
   }
 
   private clearAllEvent(): void {

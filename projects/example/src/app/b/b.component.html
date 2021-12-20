@@ -8,7 +8,7 @@
 
 <ngx-pull-to-refresh
 	spinnerColor="#ff0000"
-  distanceForRefresh="40"
+  [distanceForRefresh]="40"
 	[isEnable]="isEnable"
 	[targetElement]="targetElement"
 	(refresh)="myRefreshEvent($event, 'refresh')"

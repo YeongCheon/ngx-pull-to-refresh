@@ -9,19 +9,17 @@ import { Subject } from 'rxjs';
 export class AComponent implements OnInit {
   isEnable = true;
   title = 'A';
-  targetElement: Element;
-
-  constructor() { }
+  targetElement?: Element | null;
 
   ngOnInit(): void {
     this.targetElement = document.querySelector('html');
   }
 
-  alert(msg: string) {
+  alert(msg: string): void {
     alert(msg);
   }
 
-  myRefreshEvent(event: Subject<any>, message: string) {
+  myRefreshEvent(event: Subject<any>, message: string): void {
     setTimeout(() => {
       alert(message);
       event.next();
