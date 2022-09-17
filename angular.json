@@ -162,7 +162,6 @@
       }
     }
   },
-  "defaultProject": "ngx-pull-to-refresh",
   "cli": {
     "analytics": false
   },
