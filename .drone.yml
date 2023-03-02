@@ -14,15 +14,12 @@ steps:
       - sed -i 's/0.0.0/1.0.0/g' package.json
       - npx ng build @enercity/ngx-pull-to-refresh -c production
 
-  - name: npm publish
-    image: node:18.14-alpine
+  - name: prepare publish
+    image: alpine/git
     environment:
       GITHUB_BOT_PACKAGES:
         from_secret: GITHUB_BOT_PACKAGES
-      GITHUB_PRIVATE_KEY:
-        from_secret: SSH_PRIVATE_KEY
     commands:
-      # auth the npm login
       - mkdir -p /root/.ssh
       - echo "$GITHUB_PRIVATE_KEY" > /root/.ssh/github_id_rsa
       - chmod 600 /root/.ssh/github_id_rsa
@@ -30,7 +27,13 @@ steps:
       - ssh-add -k ~/.ssh/github_id_rsa
       - touch /root/.ssh/known_hosts
       - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      # ensure the correct publish target
+
+  - name: npm publish
+    image: node:18.14-alpine
+    environment:
+      GITHUB_PRIVATE_KEY:
+        from_secret: SSH_PRIVATE_KEY
+    commands:
       - echo "@enercity:registry=https://npm.pkg.github.com" >> .npmrc
       - echo "//npm.pkg.github.com/:_authToken=$GITHUB_BOT_PACKAGES" >> .npmrc
       - cp .npmrc ./dist/ngx-pull-to-refresh/.npmrc
