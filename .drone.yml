@@ -11,6 +11,7 @@ steps:
   - name: build
     image: node:18.14-alpine
     commands:
+      - sed -i 's/0.0.0/1.0.0/g' package.json
       - npx ng build @enercity/ngx-pull-to-refresh -c production
 
   - name: npm publish
