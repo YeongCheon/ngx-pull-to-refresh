@@ -1,0 +1,31 @@
+kind: pipeline
+type: docker
+name: deploy to github npm registry
+
+steps:
+  - name: npm ci
+    image: node:18.14-alpine
+    commands:
+      - npm ci
+
+  - name: build
+    image: node:18.14-alpine
+    commands:
+      - npx ng build @enercity/ngx-pull-to-refresh -c production
+
+  - name: npm publish
+    image: node:18.14-alpine
+    environment:
+      GITHUB_BOT_PACKAGES:
+        from_secret: GITHUB_BOT_PACKAGES
+    commands:
+      - echo "@enercity:registry=https://npm.pkg.github.com" >> .npmrc
+      - echo "//npm.pkg.github.com/:_authToken=$GITHUB_BOT_PACKAGES" >> .npmrc
+      - cp .npmrc ./dist/ngx-pull-to-refresh/.npmrc
+      - cd dist/ngx-pull-to-refresh && npm publish
+
+trigger:
+  ref:
+    - refs/tags/v*
+  event:
+    - tag
