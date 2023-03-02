@@ -1,5 +1,5 @@
 {
-  "name": "ngx-pull-to-refresh",
+  "name": "@enercity/ngx-pull-to-refresh",
   "version": "15.0.0",
   "peerDependencies": {
     "@angular/common": "^15.0.0",
