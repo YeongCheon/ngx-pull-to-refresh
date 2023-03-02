@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-pull-to-refresh": {
+    "@enercity/ngx-pull-to-refresh": {
       "projectType": "library",
       "root": "projects/ngx-pull-to-refresh",
       "sourceRoot": "projects/ngx-pull-to-refresh/src",
@@ -63,9 +63,7 @@
               "projects/example/src/favicon.ico",
               "projects/example/src/assets"
             ],
-            "styles": [
-              "projects/example/src/styles.scss"
-            ],
+            "styles": ["projects/example/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -127,9 +125,7 @@
               "projects/example/src/favicon.ico",
               "projects/example/src/assets"
             ],
-            "styles": [
-              "projects/example/src/styles.scss"
-            ],
+            "styles": ["projects/example/src/styles.scss"],
             "scripts": []
           }
         },
@@ -141,9 +137,7 @@
               "projects/example/tsconfig.spec.json",
               "projects/example/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
