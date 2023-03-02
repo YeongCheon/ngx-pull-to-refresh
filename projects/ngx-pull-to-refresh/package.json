@@ -1,6 +1,9 @@
 {
   "name": "@enercity/ngx-pull-to-refresh",
   "version": "15.0.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "peerDependencies": {
     "@angular/common": "^15.0.0",
     "@angular/core": "^15.0.0"
@@ -15,6 +18,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/YeongCheon/ngx-pull-to-refresh"
+    "url": "https://github.com/enercity/ngx-pull-to-refresh"
   }
 }
