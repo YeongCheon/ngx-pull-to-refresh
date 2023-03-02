@@ -13,6 +13,20 @@ steps:
     commands:
       - npx ng build @enercity/ngx-pull-to-refresh -c production
 
+  - name: prepare publish
+    image: alpine/git
+    environment:
+      GITHUB_PRIVATE_KEY:
+        from_secret: SSH_PRIVATE_KEY
+    commands:
+      - mkdir -p /root/.ssh
+      - echo "$GITHUB_PRIVATE_KEY" > /root/.ssh/github_id_rsa
+      - chmod 600 /root/.ssh/github_id_rsa
+      - eval `ssh-agent -s`
+      - ssh-add -k ~/.ssh/github_id_rsa
+      - touch /root/.ssh/known_hosts
+      - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
   - name: npm publish
     image: node:18.14-alpine
     environment:
