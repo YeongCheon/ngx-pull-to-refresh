@@ -17,8 +17,8 @@ steps:
   - name: prepare publish
     image: alpine/git
     environment:
-      GITHUB_BOT_PACKAGES:
-        from_secret: GITHUB_BOT_PACKAGES
+      GITHUB_PRIVATE_KEY:
+        from_secret: SSH_PRIVATE_KEY
     commands:
       - mkdir -p /root/.ssh
       - echo "$GITHUB_PRIVATE_KEY" > /root/.ssh/github_id_rsa
@@ -31,8 +31,8 @@ steps:
   - name: npm publish
     image: node:18.14-alpine
     environment:
-      GITHUB_PRIVATE_KEY:
-        from_secret: SSH_PRIVATE_KEY
+      GITHUB_BOT_PACKAGES:
+        from_secret: GITHUB_BOT_PACKAGES
     commands:
       - echo "@enercity:registry=https://npm.pkg.github.com" >> .npmrc
       - echo "//npm.pkg.github.com/:_authToken=$GITHUB_BOT_PACKAGES" >> .npmrc
