@@ -19,7 +19,7 @@ export class BComponent implements OnInit {
     alert(msg);
   }
 
-  myRefreshEvent(event: Subject<any>, message: string) {
+  myRefreshEvent(event: Subject<void>, message: string) {
     setTimeout(() => {
       alert(message);
       event.next();

@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     this.targetElement = document.querySelector('html');
   }
 
-  myRefreshEvent(event: Subject<any>, message: string): void {
+  myRefreshEvent(event: Subject<void>, message: string): void {
     setTimeout(() => {
       alert(message);
       event.next();
