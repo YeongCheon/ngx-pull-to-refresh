@@ -1,4 +1,17 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Inject,
+  effect,
+  input,
+  output,
+  viewChild,
+  PLATFORM_ID,
+  ElementRef
+} from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { Subject } from 'rxjs';
 
@@ -21,70 +34,33 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   private previousX = 0;
   private previousY = 0;
 
-  @Input()
-  spinnerColor = '#F7C223';
+  spinnerColor = input('#F7C223');
 
-  @Input()
-  isHorizontal = false;
+  isHorizontal = input(false);
 
-  @Input()
-  customClass = "";
+  customClass = input('');
 
-  private _targetElement?: Element | null;
-  @Input()
-  set targetElement(value: Element | undefined | null) {
-    if (!this.isServer) {
-      this.removeEventListener();
-
-      this._targetElement = value;
-      this.ele = this._targetElement ?? this.wrapperElement.nativeElement;
-
-      if (this._isEnable) {
-        this.addEventListener();
-      } else {
-        this.removeEventListener();
-      }
-    }
-  }
-  private _isEnable = true;
-
-  @Input()
-  set isEnable(value: boolean) {
-    if (!this.isServer) {
-      this._isEnable = value;
-
-      if (this._isEnable) {
-        this.addEventListener();
-      } else {
-        this.removeEventListener();
-      }
-    }
-  }
+  targetElement = input<Element|null|undefined>(null);
+  isEnable = input(true);
 
   private isRefresh = false;
   private isScrollTop = false;
   private isOnScrollBottom = false;
-  @ViewChild('wrapper', { static: true })
-  private wrapperElement!: ElementRef<HTMLElement>;
-  @ViewChild('contentContainer', { static: true })
-  private contentContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('loadingContainer')
-  private loadingbar!: ElementRef<HTMLDivElement>;
-  @ViewChild('circle')
-  private circleSvgElement!: ElementRef<SVGCircleElement>;
+  private wrapperElement = viewChild.required('wrapper', {read: ElementRef});
+  private contentContainer = viewChild.required('contentContainer', {read:ElementRef});
+  private loadingbar = viewChild.required('loadingContainer', {read:ElementRef});
+  private circleSvgElement = viewChild.required('circle', {read: ElementRef});
 
   private readonly CIRCLE_OFFSET = 187;
-  @Input()
-  distanceForRefresh = 40;
-  @Input()
-  spinnerSize = 300;
+  distanceForRefresh = input(40);
+  spinnerSize = input(300);
 
   scrollPullPercent = 20;
   isPlayingAnimation = false;
 
-  @Output() refresh = new EventEmitter<any>();
+  refresh = output<any>();
   refreshCompleteSubject = new Subject();
-  @Output() loadMore = new EventEmitter<any>();
+  loadMore = output<any>();
 
   private ele!: Element;
   private isContainWrapper = false;
@@ -110,6 +86,21 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: string
   ) {
     this.isServer = isPlatformServer(this.platformId);
+
+    effect(()=>{
+      if (!this.isServer) {
+        this.removeEventListener();
+
+        // this._targetElement = value;
+        this.ele = this.targetElement() ?? this.wrapperElement().nativeElement;
+
+        if (this.isEnable()) {
+        this.addEventListener();
+      } else {
+        this.removeEventListener();
+      }
+    }
+    });
   }
 
   ngOnInit(): void {
@@ -120,14 +111,13 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
         this.restoreLoadingbar();
       });
 
-      this.ele = this._targetElement ?? this.contentContainer.nativeElement;
-      if (this._isEnable) {
+      this.ele = this.targetElement() ?? this.contentContainer().nativeElement;
+
+      if (this.isEnable()) {
         this.addEventListener();
       } else {
         this.removeEventListener();
       }
-
-      this.distanceForRefresh = +this.distanceForRefresh;
     }
   }
 
@@ -139,11 +129,11 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   onTouchMove($event: TouchEvent): void {
     if (this.isPlayingAnimation) {
       return;
-    } else if (!this._isEnable) {
+    } else if (!this.isEnable()) {
       return;
     } else if (!this.isContainWrapper) {
       return;
-    } else if (this.isHorizontal) {
+    } else if (this.isHorizontal()) {
       return;
     }
 
@@ -155,7 +145,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
       this.isScrollTop = false;
     }
 
-    const loadingbar = this.loadingbar.nativeElement;
+    const loadingbar = this.loadingbar().nativeElement;
 
     if (this.startScreenY > currentScreenY) {
       this.distance = 0;
@@ -163,12 +153,12 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
       this.distance = Math.abs(currentScreenY - this.startScreenY);
     }
 
-    if (this.distance > this.distanceForRefresh) {
-      this.distance = this.distanceForRefresh;
+    if (this.distance > this.distanceForRefresh()) {
+      this.distance = this.distanceForRefresh();
     }
-    this.isRefresh = this.isScrollTop && this.distance >= this.distanceForRefresh;
+    this.isRefresh = this.isScrollTop && this.distance >= this.distanceForRefresh();
 
-    const contentContainerElement = this.contentContainer.nativeElement;
+    const contentContainerElement = this.contentContainer().nativeElement;
 
     if (this.isScrollTop && this.distance >= 0) {
       contentContainerElement.style.transform = `translateY(${this.distance}px)`;
@@ -179,7 +169,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
       loadingbar.style.visibility = 'hidden';
     }
 
-    this.scrollPullPercent = (this.distance / this.distanceForRefresh) * 100;
+    this.scrollPullPercent = (this.distance / this.distanceForRefresh()) * 100;
     this.isRefresh = this.scrollPullPercent >= 100 && this.isScrollTop;
 
     if (this.scrollPullPercent < 0) {
@@ -190,13 +180,13 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   onScroll($event: Event): void {
-    if (!this._isEnable) {
+    if (!this.isEnable()) {
       return;
     }
 
     const scrollX = this.ele.scrollLeft;
     const scrollY = this.ele.scrollTop;
-    if (this.isHorizontal) {
+    if (this.isHorizontal()) {
       this.isOnScrollBottom = scrollX >= 0 &&
         scrollX > this.previousX &&
         this.ele.clientWidth + this.ele.scrollLeft >= this.ele.scrollWidth * 0.85;
@@ -210,7 +200,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
     if (this.isOnScrollBottom &&
       this.loadMoreFunction &&
-      document.contains(this.wrapperElement.nativeElement)) {
+      document.contains(this.wrapperElement().nativeElement)) {
       this.loadMoreFunction();
     }
   }
@@ -219,14 +209,14 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     this.chagneDetectorRef.detectChanges();
     if (this.isPlayingAnimation) {
       return;
-    } else if (this.isHorizontal) {
+    } else if (this.isHorizontal()) {
       return;
     }
     const path = this.getParentElementList($event.target as HTMLElement); // FIXME 'as'
 
     this.isContainWrapper = false;
     for (const item of path) {
-      if (item === this.wrapperElement.nativeElement) {
+      if (item === this.wrapperElement().nativeElement) {
         this.isContainWrapper = true;
         break;
       }
@@ -234,7 +224,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
     if (!this.isContainWrapper) {
       return;
-    } else if (!this._isEnable) {
+    } else if (!this.isEnable()) {
       return;
     }
 
@@ -250,11 +240,11 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
       return;
     } else if (!this.isContainWrapper) {
       return;
-    } else if (this.isHorizontal) {
+    } else if (this.isHorizontal()) {
       return;
     }
 
-    if (this.isRefresh && document.contains(this.wrapperElement.nativeElement)) {
+    if (this.isRefresh && document.contains(this.wrapperElement().nativeElement)) {
       this.refreshFunction();
     } else {
       this.restoreWrapper();
@@ -263,20 +253,20 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   }
 
   restoreWrapper(): void {
-    this.contentContainer.nativeElement.style.position = 'relative';
-    this.contentContainer.nativeElement.style.transform = `translateY(0)`;
+    this.contentContainer().nativeElement.style.position = 'relative';
+    this.contentContainer().nativeElement.style.transform = `translateY(0)`;
     // this.loadingbar.nativeElement.style.transform = `translateY(0px)`;
     this.hiddenLoadingbar();
   }
 
   private hiddenLoadingbar() {
-    this.loadingbar.nativeElement.style.visibility = 'hidden';
+    this.loadingbar().nativeElement.style.visibility = 'hidden';
   }
 
   restoreLoadingbar(): void {
     this.scrollPullPercent = 0;
     this.drawCircle(0);
-    this.loadingbar.nativeElement.style.transform = `translateY(0)`;
+    this.loadingbar().nativeElement.style.transform = `translateY(0)`;
     this.hiddenLoadingbar();
   }
 
@@ -291,7 +281,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
 
   private drawCircle(percentage: number) {
     const offset = this.CIRCLE_OFFSET - (this.CIRCLE_OFFSET * (Math.abs(percentage) / 100));
-    this.circleSvgElement.nativeElement.style.strokeDashoffset = `${offset}px`;
+    this.circleSvgElement().nativeElement.style.strokeDashoffset = `${offset}px`;
   }
 
   private getParentElementList(srcElement: HTMLElement): HTMLElement[] {

@@ -1,12 +1,14 @@
 <ngx-pull-to-refresh
-	#horizontalElement
-	[isHorizontal]="true"
-	(loadMore)="alert('loadMore')"
->
-	<ul>
-		<li *ngFor="let item of items">item {{item}}</li>
-	</ul>
-	
+  #horizontalElement
+  [isHorizontal]="true"
+  (loadMore)="alert('loadMore')"
+  >
+  <ul>
+    @for (item of items; track item) {
+      <li>item {{item}}</li>
+    }
+  </ul>
+
 </ngx-pull-to-refresh>
 
 <h1><a routerLink="/a">A</a></h1>
