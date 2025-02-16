@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { NgxPullToRefreshComponent } from '../../../../ngx-pull-to-refresh/src/lib/ngx-pull-to-refresh.component';
 
 @Component({
-  selector: 'app-a',
-  templateUrl: './a.component.html',
-  styleUrls: ['./a.component.scss']
+    selector: 'app-a',
+    templateUrl: './a.component.html',
+    styleUrls: ['./a.component.scss'],
+    imports: [NgxPullToRefreshComponent]
 })
 export class AComponent implements OnInit {
   isEnable = true;

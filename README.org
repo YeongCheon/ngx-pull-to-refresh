@@ -1,6 +1,6 @@
 #+TITLE: README
 #+AUTHOR: yeongcheon
-#+DATE: 2020-11-29 17:00:00 +0900
+#+DATE: 2025-02-16 12:20:00 +0900
 
 * ngx-pull-to-refresh
 
@@ -13,32 +13,18 @@ ngx-pull-to-refresh is angular component look like [[https://developer.android.c
    npm install ngx-pull-to-refresh
    #+END_SRC
 
-2. import module
-   #+BEGIN_SRC typescript
-import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh';
-
-@NgModule({
-  declarations: [
-    ...
-  ],
-  imports: [
-    NgxPullToRefreshModule,
-    ...
-  ],
-})
-export class YourModule { }
-   #+END_SRC
-
-3. use ~ngx-pull-to-refresh~ tag in your project
+2. use ~ngx-pull-to-refresh~ tag in your project
    * TS
    #+BEGIN_SRC typescript
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { NgxPullToRefreshComponent } from 'ngx-pull-to-refresh';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    imports: [NgxPullToRefreshComponent]
 })
 export class AppComponent implements OnInit {
     title = 'example';

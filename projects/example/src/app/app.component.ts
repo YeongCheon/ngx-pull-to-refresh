@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { NgxPullToRefreshComponent } from 'projects/ngx-pull-to-refresh/src/lib/ngx-pull-to-refresh.component';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  imports: [RouterModule, NgxPullToRefreshComponent]
 })
 export class AppComponent implements OnInit {
   isEnable = true;

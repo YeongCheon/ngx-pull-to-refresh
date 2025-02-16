@@ -12,14 +12,15 @@ import {
   PLATFORM_ID,
   ElementRef
 } from '@angular/core';
-import { isPlatformServer } from '@angular/common';
+import { isPlatformServer, NgClass } from '@angular/common';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ngx-pull-to-refresh',
   templateUrl: './ngx-pull-to-refresh.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./ngx-pull-to-refresh.component.scss']
+  styleUrls: ['./ngx-pull-to-refresh.component.scss'],
+  imports: [NgClass]
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
   static touchstartEventList: any[] = [];

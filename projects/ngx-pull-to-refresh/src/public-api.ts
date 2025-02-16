@@ -3,4 +3,4 @@
  */
 
 export * from './lib/ngx-pull-to-refresh.component';
-export * from './lib/ngx-pull-to-refresh.module';
+

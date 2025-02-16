@@ -8,8 +8,8 @@ describe('NgxPullToRefreshComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NgxPullToRefreshComponent ]
-    })
+    imports: [NgxPullToRefreshComponent]
+})
     .compileComponents();
   }));
 
