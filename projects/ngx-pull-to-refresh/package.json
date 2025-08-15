@@ -1,9 +1,9 @@
 {
   "name": "ngx-pull-to-refresh",
-  "version": "19.0.0",
+  "version": "20.0.0",
   "peerDependencies": {
-    "@angular/common": "^19",
-    "@angular/core": "^19"
+    "@angular/common": ">=20.0.0 <22.0.0",
+    "@angular/core": ">=20.0.0 <22.0.0"
   },
   "author": {
     "name" : "YeongCheon Kim",
