@@ -15,7 +15,7 @@ npm install ngx-pull-to-refresh
 
 | ngx-pull-to-refresh | Angular   |
 |---------------------|-----------|
-| 22.x                | >= 21     |
+| 22.x                | >= 22     |
 | 20.x                | 20 – 21   |
 | 19.x                | 19        |
 | 18.x                | ^18.1     |
