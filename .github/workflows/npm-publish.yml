@@ -7,13 +7,13 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org/
-      - run: npm install
-      - run: node ./node_modules/@angular/cli/bin/ng.js build --configuration production ngx-pull-to-refresh
+      - run: npm ci
+      - run: npx ng build --configuration production ngx-pull-to-refresh
       - run: npm publish ./dist/ngx-pull-to-refresh
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

@@ -1,17 +1,33 @@
 {
   "name": "ngx-pull-to-refresh",
-  "version": "20.0.0",
+  "version": "22.0.0",
+  "description": "Pull to refresh component for Angular",
+  "keywords": [
+    "angular",
+    "pull-to-refresh",
+    "refresh",
+    "infinite-scroll",
+    "mobile"
+  ],
+  "license": "MIT",
   "peerDependencies": {
-    "@angular/common": ">=20.0.0 <22.0.0",
-    "@angular/core": ">=20.0.0 <22.0.0"
+    "@angular/common": ">=21.0.0",
+    "@angular/core": ">=21.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.8.1"
   },
   "author": {
-    "name" : "YeongCheon Kim",
-    "email" : "kyc1682@gmail.com",
-    "url" : "https://yeongcheon.github.io/"
+    "name": "YeongCheon Kim",
+    "email": "kyc1682@gmail.com",
+    "url": "https://yeongcheon.github.io/"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/YeongCheon/ngx-pull-to-refresh"
+  },
+  "homepage": "https://github.com/YeongCheon/ngx-pull-to-refresh#readme",
+  "bugs": {
+    "url": "https://github.com/YeongCheon/ngx-pull-to-refresh/issues"
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { NgxPullToRefreshComponent } from '../../../../ngx-pull-to-refresh/src/lib/ngx-pull-to-refresh.component';
+import { NgxPullToRefreshComponent } from 'ngx-pull-to-refresh';
 
 @Component({
     selector: 'app-a',

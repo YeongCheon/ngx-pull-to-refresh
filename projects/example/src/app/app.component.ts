@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NgxPullToRefreshComponent } from 'projects/ngx-pull-to-refresh/src/lib/ngx-pull-to-refresh.component';
+import { NgxPullToRefreshComponent } from 'ngx-pull-to-refresh';
 import { Subject } from 'rxjs';
 
 @Component({

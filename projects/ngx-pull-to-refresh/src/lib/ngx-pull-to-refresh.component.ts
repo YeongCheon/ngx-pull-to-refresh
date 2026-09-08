@@ -1,17 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Inject,
-  effect,
-  input,
-  output,
-  viewChild,
-  PLATFORM_ID,
-  ElementRef
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, effect, input, output, viewChild, PLATFORM_ID, ElementRef, inject } from '@angular/core';
 import { isPlatformServer, NgClass } from '@angular/common';
 import { Subject } from 'rxjs';
 
@@ -23,6 +10,9 @@ import { Subject } from 'rxjs';
   imports: [NgClass]
 })
 export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
+  private readonly chagneDetectorRef = inject(ChangeDetectorRef);
+  private platformId = inject(PLATFORM_ID);
+
   static touchstartEventList: any[] = [];
   static touchmoveEventList: any[] = [];
   static scrollEventList: any[] = [];
@@ -82,10 +72,7 @@ export class NgxPullToRefreshComponent implements OnInit, OnDestroy {
     this.onTouchEnd(evt);
   }
 
-  constructor(
-    private readonly chagneDetectorRef: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: string
-  ) {
+  constructor() {
     this.isServer = isPlatformServer(this.platformId);
 
     effect(()=>{

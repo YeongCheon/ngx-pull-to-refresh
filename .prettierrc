@@ -1,12 +1,7 @@
 {
-  "tabWidth": 2,
-  "useTabs": false,
-  "semi": true,
+  "printWidth": 100,
   "singleQuote": true,
-  "quoteProps": "as-needed",
-  "trailingComma": "none",
-  "bracketSpacing": true,
-  "arrowParens": "always",
+  "trailingComma": "es5",
   "overrides": [
     {
       "files": "*.html",
